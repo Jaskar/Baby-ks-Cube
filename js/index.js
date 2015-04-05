@@ -34,10 +34,71 @@ function initScene() {
     Cube.initColors(scene);
     Cube.initFaces(scene);
 
-    Cube.turnFront();
+    var moves = [];
+
+    var nextMove = function() {
+        moves[0]();
+        moves.shift();
+    };
+
+    var sens = false;
+
+    var turnFront = function() {
+        Cube.turnFront(function() {
+            nextMove();
+        });
+    };
+    var turnFrontReverse = function() {
+        Cube.turnFront(function() {
+            nextMove();
+        }, true);
+    };
+    var turnRight = function() {
+        Cube.turnRight(function() {
+            nextMove();
+        });
+    };
+    var turnRightReverse = function() {
+        Cube.turnRight(function() {
+            nextMove();
+        }, true);
+    };
+    var turnBack = function() {
+        Cube.turnBack(function() {
+            nextMove();
+        });
+    };
+    var turnBackReverse = function() {
+        Cube.turnBack(function() {
+            nextMove();
+        }, true);
+    };
+    var turnLeft = function() {
+        Cube.turnLeft(function() {
+            nextMove();
+        });
+    };
+    var turnLeftReverse = function() {
+        Cube.turnLeft(function() {
+            nextMove();
+        }, true);
+    };
+
+    //moves.push(turnFront);
+    //moves.push(turnBack);
+    //moves.push(turnLeft);
+    //moves.push(turnFront);
+    //moves.push(turnBack);
+    //moves.push(turnLeft);
+    moves.push(turnFront);
+    moves.push(turnFront);
+    moves.push(turnFront);
+    moves.push(turnRightReverse);
+    moves.push(turnRightReverse);
+    moves.push(turnRightReverse);
+    nextMove();
 
     engine.runRenderLoop(function () {
-        Cube.render(engine.getDeltaTime());
         scene.render();
     });
 }

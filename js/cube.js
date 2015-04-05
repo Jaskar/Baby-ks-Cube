@@ -30,8 +30,8 @@ Cube = {
     _leftPlanes  : [[null,null,null],[null,null,null],[null,null,null]],
     _rightPlanes : [[null,null,null],[null,null,null],[null,null,null]],
 
-    _registeredRender : [],
-    _totalCoeff : 0,
+    _stateBeforeMove : [],
+    _speed : 75,
 
 
     /********* FUNCTIONS *********/
@@ -65,6 +65,8 @@ Cube = {
     },
 
     initFaces : function(scene) {
+        var pivotCenter = BABYLON.Mesh.CreateBox("pivotCenter", 1, scene);
+        pivotCenter.visibility = false;
 
         // Front
         for(var x = 0; x < 3; x++) {
@@ -73,11 +75,11 @@ Cube = {
                 this._frontPlanes[x][y].position.x = x-1;
                 this._frontPlanes[x][y].position.y = y-1;
                 this._frontPlanes[x][y].position.z =  +1.5;
-                this._frontPlanes[x][y].rotation.y = Math.PI;
                 this._frontPlanes[x][y].scaling.x = 0.95;
                 this._frontPlanes[x][y].scaling.y = 0.95;
                 this._frontPlanes[x][y].scaling.z = 0.01;
                 this._frontPlanes[x][y].material = this._matGreen;
+                this._frontPlanes[x][y].parent = pivotCenter;
             }
         }
 
@@ -88,11 +90,11 @@ Cube = {
                 this._backPlanes[x][y].position.x = x-1;
                 this._backPlanes[x][y].position.y = y-1;
                 this._backPlanes[x][y].position.z =  -1.5;
-                this._backPlanes[x][y].rotation.y = 0;
                 this._backPlanes[x][y].scaling.x = 0.95;
                 this._backPlanes[x][y].scaling.y = 0.95;
                 this._backPlanes[x][y].scaling.z = 0.01;
                 this._backPlanes[x][y].material = this._matBlue;
+                this._backPlanes[x][y].parent = pivotCenter;
             }
         }
 
@@ -103,11 +105,11 @@ Cube = {
                 this._upPlanes[x][y].position.x = x-1;
                 this._upPlanes[x][y].position.y =  +1.5;
                 this._upPlanes[x][y].position.z = y-1;
-                this._upPlanes[x][y].rotation.x = Math.PI;
                 this._upPlanes[x][y].scaling.x = 0.95;
                 this._upPlanes[x][y].scaling.y = 0.01;
                 this._upPlanes[x][y].scaling.z = 0.95;
                 this._upPlanes[x][y].material = this._matWhite;
+                this._upPlanes[x][y].parent = pivotCenter;
             }
         }
 
@@ -118,11 +120,11 @@ Cube = {
                 this._downPlanes[x][y].position.x = x-1;
                 this._downPlanes[x][y].position.y =  -1.5;
                 this._downPlanes[x][y].position.z = y-1;
-                this._downPlanes[x][y].rotation.x = Math.PI;
                 this._downPlanes[x][y].scaling.x = 0.95;
                 this._downPlanes[x][y].scaling.y = 0.01;
                 this._downPlanes[x][y].scaling.z = 0.95;
                 this._downPlanes[x][y].material = this._matYellow;
+                this._downPlanes[x][y].parent = pivotCenter;
             }
         }
 
@@ -133,11 +135,11 @@ Cube = {
                 this._leftPlanes[x][y].position.x =   1.5;
                 this._leftPlanes[x][y].position.y = y-1;
                 this._leftPlanes[x][y].position.z = x-1;
-                this._leftPlanes[x][y].rotation.x = Math.PI;
                 this._leftPlanes[x][y].scaling.x = 0.01;
                 this._leftPlanes[x][y].scaling.y = 0.95;
                 this._leftPlanes[x][y].scaling.z = 0.95;
                 this._leftPlanes[x][y].material = this._matOrange;
+                this._leftPlanes[x][y].parent = pivotCenter;
             }
         }
 
@@ -148,122 +150,588 @@ Cube = {
                 this._rightPlanes[x][y].position.x =  -1.5;
                 this._rightPlanes[x][y].position.y = y-1;
                 this._rightPlanes[x][y].position.z = x-1;
-                this._rightPlanes[x][y].rotation.y = Math.PI;
                 this._rightPlanes[x][y].scaling.x = 0.01;
                 this._rightPlanes[x][y].scaling.y = 0.95;
                 this._rightPlanes[x][y].scaling.z = 0.95;
                 this._rightPlanes[x][y].material = this._matRed;
+                this._rightPlanes[x][y].parent = pivotCenter;
             }
         }
     },
 
-    render : function(deltaTime) {
-        if(this._registeredRender[0] != null) {
-            var that = this;
-            this._registeredRender[0](deltaTime, that);
+
+    // Function to rotate something around X Axis
+    _rotateAroundX : function(object, angle, reverseRotation) {
+        reverseRotation = reverseRotation || false;
+
+        object.animations = [];
+        var distance = Math.sqrt(
+            Math.pow((object.position.z), 2) +
+            Math.pow((object.position.y), 2)
+        );
+        var actualRotation = Math.atan2(object.position.z, object.position.y);
+
+        var animationKeys = [];
+        var animationPosition = new BABYLON.Animation(
+            "animationPosition",
+            "position",
+            this._speed,
+            BABYLON.Animation.ANIMATIONTYPE_VECTOR3,
+            BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
+        );
+        animationKeys = [];
+        animationKeys.push({
+            frame: 0,
+            value: new BABYLON.Vector3(
+                object.position.x,
+                object.position.y,
+                object.position.z
+            )
+        });
+        for(var i = 1; i <= 100; i++) {
+            var stepAngle = (angle / 100) * i;
+            animationKeys.push({
+                frame : i,
+                value : new BABYLON.Vector3(
+                    object.position.x,
+                    Math.cos(actualRotation + stepAngle) * distance,
+                    Math.sin(actualRotation + stepAngle) * distance
+                )
+            });
         }
+        animationPosition.setKeys(animationKeys);
+
+        object.animations.push(animationPosition);
+
+        var animationRotation = new BABYLON.Animation(
+            "animationRotation",
+            "rotation.x",
+            this._speed,
+            BABYLON.Animation.ANIMATIONTYPE_FLOAT,
+            BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
+        );
+
+        if(reverseRotation) {
+            angle *= -1;
+        }
+        animationKeys = [
+            { frame : 0, value : (object.rotation.x) },
+            { frame : 100, value : (object.rotation.x + angle) }
+        ];
+        animationRotation.setKeys(animationKeys);
+
+        object.animations.push(animationRotation);
+
+        var that = this;
+        this._scene.beginAnimation(object, 0, 100, false, 1, function() {
+            that._moveBeforeNext --;
+            if(that._moveBeforeNext == 0) {
+                // Without timeout there is a bug
+                setTimeout(function() {
+                    that._callback();
+                }, 2);
+            }
+        });
+        this._moveBeforeNext ++;
     },
 
-    // Function to rotate something around a point
-    _rotateAroundZ : function(object, pivot, angle) {
+    // Function to rotate something around Z Axis
+    _rotateAroundZ : function(object, angle, reverseRotation) {
+        reverseRotation = reverseRotation || false;
+
+        object.animations = [];
         var distance = Math.sqrt(
-            Math.pow((object.position.x - pivot.x), 2) +
-            Math.pow((object.position.y - pivot.y), 2)
+            Math.pow((object.position.x), 2) +
+            Math.pow((object.position.y), 2)
         );
         var actualRotation = Math.atan2(object.position.x, object.position.y);
 
-        object.rotate(BABYLON.Axis.Z, angle, BABYLON.Space.world);
-        object.position = new BABYLON.Vector3(
-            Math.sin(actualRotation + angle) * distance,
-            Math.cos(actualRotation + angle) * distance,
-            object.position.z
+        var animationKeys = [];
+        var animationPosition = new BABYLON.Animation(
+            "animationPosition",
+            "position",
+            this._speed,
+            BABYLON.Animation.ANIMATIONTYPE_VECTOR3,
+            BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
         );
+        animationKeys = [];
+        animationKeys.push({
+            frame: 0,
+            value: new BABYLON.Vector3(
+                object.position.x,
+                object.position.y,
+                object.position.z
+            )
+        });
+        for(var i = 1; i <= 100; i++) {
+            var stepAngle = (angle / 100) * i;
+            animationKeys.push({
+                frame : i,
+                value : new BABYLON.Vector3(
+                    Math.sin(actualRotation + stepAngle) * distance,
+                    Math.cos(actualRotation + stepAngle) * distance,
+                    object.position.z
+                )
+            });
+        }
+        animationPosition.setKeys(animationKeys);
 
-        //var animationRotation = new BABYLON.Animation(
-        //    "roationZ",
-        //    "rotation.z",
-        //    90,
-        //    BABYLON.Animation.ANIMATIONTYPE_FLOAT,
-        //    BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
-        //);
-        //
-        //// An array with all animation keys
-        //var keys = [];
-        //keys.push({
-        //    frame: 0,
-        //    value: 1
-        //});
-        //keys.push({
-        //    frame: 25,
-        //    value: 0.25
-        //});
-        //keys.push({
-        //    frame: 50,
-        //    value: 0.5
-        //});
-        //keys.push({
-        //    frame: 75,
-        //    value: 0.75
-        //});
-        //keys.push({
-        //    frame: 100,
-        //    value: 1
-        //});
-        //
-        //animationRotation.setKeys(keys);
-        //object.animations.push(animationRotation);
+        object.animations.push(animationPosition);
+
+        var animationRotation = new BABYLON.Animation(
+            "animationRotation",
+            "rotation.z",
+            this._speed,
+            BABYLON.Animation.ANIMATIONTYPE_FLOAT,
+            BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
+        );
+        if(reverseRotation) {
+            angle *= -1;
+        }
+        animationKeys = [
+            { frame : 0, value : (object.rotation.z) },
+            { frame : 100, value : (object.rotation.z + angle) }
+        ];
+        animationRotation.setKeys(animationKeys);
+
+        object.animations.push(animationRotation);
+
+        var that = this;
+        this._scene.beginAnimation(object, 0, 100, false, 1, function() {
+            that._moveBeforeNext --;
+            if(that._moveBeforeNext == 0) {
+                // Without timeout there is a bug
+                setTimeout(function() {
+                    that._callback();
+                }, 2);
+            }
+        });
+        this._moveBeforeNext ++;
     },
 
-    // Turn front face
-    turnFront : function() {
-        this._registeredRender.push(this._turnFrontBy);
-    },
-    _turnFrontBy : function(coeff, that) {
 
-        // Center of left face
-        var pivot = new BABYLON.Vector3(0,0,0);
-        // Rotation
-        var rotation = Math.PI/2;
+    /**
+     * Turn front face
+     * @param callback
+     * @param reverse : Default false
+     */
+    turnFront : function(callback, reverse) {
+        reverse = reverse || false;
 
-        // Rotation coeff
-        coeff /= 1500;
-        coeff *= rotation;
-        that._totalCoeff += coeff;
+        this._moveBeforeNext = 0;
+        var coeff = -Math.PI / 2;
+        if(reverse) { coeff = -coeff; }
 
-        if(that._totalCoeff > rotation) {
-            that._totalCoeff = 0;
-            that._registeredRender.shift();
-            return;
+        if(reverse) {
+            this._callback = function() {
+                for(var i = 0; i < 2; i++) {
+                    var tempPlane = this._frontPlanes[0][0];
+                    this._frontPlanes[0][0] = this._frontPlanes[1][0];
+                    this._frontPlanes[1][0] = this._frontPlanes[2][0];
+                    this._frontPlanes[2][0] = this._frontPlanes[2][1];
+                    this._frontPlanes[2][1] = this._frontPlanes[2][2];
+                    this._frontPlanes[2][2] = this._frontPlanes[1][2];
+                    this._frontPlanes[1][2] = this._frontPlanes[0][2];
+                    this._frontPlanes[0][2] = this._frontPlanes[0][1];
+                    this._frontPlanes[0][1] = tempPlane;
+                }
+                for(var i = 0; i < 3; i++) {
+                    tempPlane = this._rightPlanes[2][2];
+                    this._rightPlanes[2][2] = this._rightPlanes[2][1];
+                    this._rightPlanes[2][1] = this._rightPlanes[2][0];
+                    this._rightPlanes[2][0] = this._downPlanes[0][2];
+                    this._downPlanes[0][2] = this._downPlanes[1][2];
+                    this._downPlanes[1][2] = this._downPlanes[2][2];
+                    this._downPlanes[2][2] = this._leftPlanes[2][0];
+                    this._leftPlanes[2][0] = this._leftPlanes[2][1];
+                    this._leftPlanes[2][1] = this._leftPlanes[2][2];
+                    this._leftPlanes[2][2] = this._upPlanes[2][2];
+                    this._upPlanes[2][2] = this._upPlanes[1][2];
+                    this._upPlanes[1][2] = this._upPlanes[0][2];
+                    this._upPlanes[0][2] = tempPlane;
+                }
+
+                this._callback = null;
+                callback();
+            };
+        }
+        else {
+            this._callback = function() {
+                for(var i = 0; i < 2; i++) {
+                    var tempPlane = this._frontPlanes[0][0];
+                    this._frontPlanes[0][0] = this._frontPlanes[0][1];
+                    this._frontPlanes[0][1] = this._frontPlanes[0][2];
+                    this._frontPlanes[0][2] = this._frontPlanes[1][2];
+                    this._frontPlanes[1][2] = this._frontPlanes[2][2];
+                    this._frontPlanes[2][2] = this._frontPlanes[2][1];
+                    this._frontPlanes[2][1] = this._frontPlanes[2][0];
+                    this._frontPlanes[2][0] = this._frontPlanes[1][0];
+                    this._frontPlanes[1][0] = tempPlane;
+                }
+                for(var i = 0; i < 3; i++) {
+                    tempPlane = this._rightPlanes[2][2];
+                    this._rightPlanes[2][2] = this._upPlanes[0][2];
+                    this._upPlanes[0][2] = this._upPlanes[1][2];
+                    this._upPlanes[1][2] = this._upPlanes[2][2];
+                    this._upPlanes[2][2] = this._leftPlanes[2][2];
+                    this._leftPlanes[2][2] = this._leftPlanes[2][1];
+                    this._leftPlanes[2][1] = this._leftPlanes[2][0];
+                    this._leftPlanes[2][0] = this._downPlanes[2][2];
+                    this._downPlanes[2][2] = this._downPlanes[1][2];
+                    this._downPlanes[1][2] = this._downPlanes[0][2];
+                    this._downPlanes[0][2] = this._rightPlanes[2][0];
+                    this._rightPlanes[2][0] = this._rightPlanes[2][1];
+                    this._rightPlanes[2][1] = tempPlane;
+                }
+
+                this._callback = null;
+                callback();
+            };
         }
 
-        that._rotateAroundZ(that._frontPlanes[0][0], pivot, coeff);
-        that._rotateAroundZ(that._frontPlanes[0][1], pivot, coeff);
-        that._rotateAroundZ(that._frontPlanes[0][2], pivot, coeff);
-        that._rotateAroundZ(that._frontPlanes[1][0], pivot, coeff);
-        that._rotateAroundZ(that._frontPlanes[1][1], pivot, coeff);
-        that._rotateAroundZ(that._frontPlanes[1][2], pivot, coeff);
-        that._rotateAroundZ(that._frontPlanes[2][0], pivot, coeff);
-        that._rotateAroundZ(that._frontPlanes[2][1], pivot, coeff);
-        that._rotateAroundZ(that._frontPlanes[2][2], pivot, coeff);
+        this._rotateAroundZ(this._frontPlanes[0][0], coeff, true);
+        this._rotateAroundZ(this._frontPlanes[0][1], coeff, true);
+        this._rotateAroundZ(this._frontPlanes[0][2], coeff, true);
+        this._rotateAroundZ(this._frontPlanes[1][0], coeff, true);
+        this._rotateAroundZ(this._frontPlanes[1][1], coeff, true);
+        this._rotateAroundZ(this._frontPlanes[1][2], coeff, true);
+        this._rotateAroundZ(this._frontPlanes[2][0], coeff, true);
+        this._rotateAroundZ(this._frontPlanes[2][1], coeff, true);
+        this._rotateAroundZ(this._frontPlanes[2][2], coeff, true);
 
-        that._rotateAroundZ(that._rightPlanes[2][0], pivot, coeff);
-        that._rotateAroundZ(that._rightPlanes[2][1], pivot, coeff);
-        that._rotateAroundZ(that._rightPlanes[2][2], pivot, coeff);
+        this._rotateAroundZ(this._rightPlanes[2][0], coeff, true);
+        this._rotateAroundZ(this._rightPlanes[2][1], coeff, true);
+        this._rotateAroundZ(this._rightPlanes[2][2], coeff, true);
 
-        that._rotateAroundZ(that._upPlanes[0][2], pivot, coeff);
-        that._rotateAroundZ(that._upPlanes[1][2], pivot, coeff);
-        that._rotateAroundZ(that._upPlanes[2][2], pivot, coeff);
+        this._rotateAroundZ(this._upPlanes[0][2], coeff, true);
+        this._rotateAroundZ(this._upPlanes[1][2], coeff, true);
+        this._rotateAroundZ(this._upPlanes[2][2], coeff, true);
 
-        that._rotateAroundZ(that._leftPlanes[2][0], pivot, coeff);
-        that._rotateAroundZ(that._leftPlanes[2][1], pivot, coeff);
-        that._rotateAroundZ(that._leftPlanes[2][2], pivot, coeff);
+        this._rotateAroundZ(this._leftPlanes[2][0], coeff, true);
+        this._rotateAroundZ(this._leftPlanes[2][1], coeff, true);
+        this._rotateAroundZ(this._leftPlanes[2][2], coeff, true);
 
-        that._rotateAroundZ(that._downPlanes[0][2], pivot, coeff);
-        that._rotateAroundZ(that._downPlanes[1][2], pivot, coeff);
-        that._rotateAroundZ(that._downPlanes[2][2], pivot, coeff);
+        this._rotateAroundZ(this._downPlanes[0][2], coeff, true);
+        this._rotateAroundZ(this._downPlanes[1][2], coeff, true);
+        this._rotateAroundZ(this._downPlanes[2][2], coeff, true);
+    },
 
-        //that._scene.beginAnimation(that._frontPlanes[0][0], 0, 100, false);
+    /**
+     * Turn back face
+     * @param callback
+     * @param reverse : Default false
+     */
+    turnBack : function(callback, reverse) {
+        reverse = reverse || false;
 
+        this._moveBeforeNext = 0;
+        var coeff = Math.PI / 2;
+        if(reverse) { coeff = -coeff; }
+
+        if(reverse) {
+            this._callback = function() {
+                for(var i = 0; i < 2; i++) {
+                    var tempPlane = this._backPlanes[0][0];
+                    this._backPlanes[0][0] = this._backPlanes[0][1];
+                    this._backPlanes[0][1] = this._backPlanes[0][2];
+                    this._backPlanes[0][2] = this._backPlanes[1][2];
+                    this._backPlanes[1][2] = this._backPlanes[2][2];
+                    this._backPlanes[2][2] = this._backPlanes[2][1];
+                    this._backPlanes[2][1] = this._backPlanes[2][0];
+                    this._backPlanes[2][0] = this._backPlanes[1][0];
+                    this._backPlanes[1][0] = tempPlane;
+                }
+                for(var i = 0; i < 3; i++) {
+                    tempPlane = this._rightPlanes[0][0];
+                    this._rightPlanes[0][0] = this._rightPlanes[0][1];
+                    this._rightPlanes[0][1] = this._rightPlanes[0][2];
+                    this._rightPlanes[0][2] = this._upPlanes[0][0];
+                    this._upPlanes[0][0] = this._upPlanes[1][0];
+                    this._upPlanes[1][0] = this._upPlanes[2][0];
+                    this._upPlanes[2][0] = this._leftPlanes[0][2];
+                    this._leftPlanes[0][2] = this._leftPlanes[0][1];
+                    this._leftPlanes[0][1] = this._leftPlanes[0][0];
+                    this._leftPlanes[0][0] = this._downPlanes[2][0];
+                    this._downPlanes[2][0] = this._downPlanes[1][0];
+                    this._downPlanes[1][0] = this._downPlanes[0][0]
+                    this._downPlanes[0][0] = tempPlane;
+                }
+
+                this._callback = null;
+                callback();
+            };
+        }
+        else {
+            this._callback = function() {
+                for(var i = 0; i < 2; i++) {
+                    var tempPlane = this._backPlanes[0][2];
+                    this._backPlanes[0][2] = this._backPlanes[0][1];
+                    this._backPlanes[0][1] = this._backPlanes[0][0];
+                    this._backPlanes[0][0] = this._backPlanes[1][0];
+                    this._backPlanes[1][0] = this._backPlanes[2][0];
+                    this._backPlanes[2][0] = this._backPlanes[2][1];
+                    this._backPlanes[2][1] = this._backPlanes[2][2];
+                    this._backPlanes[2][2] = this._backPlanes[1][2];
+                    this._backPlanes[1][2] = tempPlane;
+                }
+                for(var i = 0; i < 3; i++) {
+                    tempPlane = this._downPlanes[0][0];
+                    this._downPlanes[0][0] = this._downPlanes[1][0];
+                    this._downPlanes[1][0] = this._downPlanes[2][0];
+                    this._downPlanes[2][0] = this._leftPlanes[0][0];
+                    this._leftPlanes[0][0] = this._leftPlanes[0][1];
+                    this._leftPlanes[0][1] = this._leftPlanes[0][2];
+                    this._leftPlanes[0][2] = this._upPlanes[2][0];
+                    this._upPlanes[2][0] = this._upPlanes[1][0];
+                    this._upPlanes[1][0] = this._upPlanes[0][0];
+                    this._upPlanes[0][0] = this._rightPlanes[0][2];
+                    this._rightPlanes[0][2] = this._rightPlanes[0][1];
+                    this._rightPlanes[0][1] = this._rightPlanes[0][0];
+                    this._rightPlanes[0][0] = tempPlane;
+                }
+
+                this._callback = null;
+                callback();
+            };
+        }
+
+        this._rotateAroundZ(this._backPlanes[0][0], coeff, true);
+        this._rotateAroundZ(this._backPlanes[0][1], coeff, true);
+        this._rotateAroundZ(this._backPlanes[0][2], coeff, true);
+        this._rotateAroundZ(this._backPlanes[1][0], coeff, true);
+        this._rotateAroundZ(this._backPlanes[1][1], coeff, true);
+        this._rotateAroundZ(this._backPlanes[1][2], coeff, true);
+        this._rotateAroundZ(this._backPlanes[2][0], coeff, true);
+        this._rotateAroundZ(this._backPlanes[2][1], coeff, true);
+        this._rotateAroundZ(this._backPlanes[2][2], coeff, true);
+
+        this._rotateAroundZ(this._rightPlanes[0][0], coeff, true);
+        this._rotateAroundZ(this._rightPlanes[0][1], coeff, true);
+        this._rotateAroundZ(this._rightPlanes[0][2], coeff, true);
+
+        this._rotateAroundZ(this._upPlanes[0][0], coeff, true);
+        this._rotateAroundZ(this._upPlanes[1][0], coeff, true);
+        this._rotateAroundZ(this._upPlanes[2][0], coeff, true);
+
+        this._rotateAroundZ(this._leftPlanes[0][0], coeff, true);
+        this._rotateAroundZ(this._leftPlanes[0][1], coeff, true);
+        this._rotateAroundZ(this._leftPlanes[0][2], coeff, true);
+
+        this._rotateAroundZ(this._downPlanes[0][0], coeff, true);
+        this._rotateAroundZ(this._downPlanes[1][0], coeff, true);
+        this._rotateAroundZ(this._downPlanes[2][0], coeff, true);
+    },
+
+    /**
+     * Turn left face
+     * @param callback
+     * @param reverse : Default false
+     */
+    turnLeft : function(callback, reverse) {
+        reverse = reverse || false;
+
+        this._moveBeforeNext = 0;
+        var coeff = Math.PI / 2;
+        if(reverse) { coeff = -coeff; }
+
+        if(reverse) {
+            this._callback = function() {
+                for(var i = 0; i < 2; i++) {
+                    var tempPlane = this._leftPlanes[0][0];
+                    this._leftPlanes[0][0] = this._leftPlanes[0][1];
+                    this._leftPlanes[0][1] = this._leftPlanes[0][2];
+                    this._leftPlanes[0][2] = this._leftPlanes[1][2];
+                    this._leftPlanes[1][2] = this._leftPlanes[2][2];
+                    this._leftPlanes[2][2] = this._leftPlanes[2][1];
+                    this._leftPlanes[2][1] = this._leftPlanes[2][0];
+                    this._leftPlanes[2][0] = this._leftPlanes[1][0];
+                    this._leftPlanes[1][0] = tempPlane;
+                }
+                for(var i = 0; i < 3; i++) {
+                    tempPlane = this._frontPlanes[2][2];
+                    this._frontPlanes[2][2] = this._frontPlanes[2][1];
+                    this._frontPlanes[2][1] = this._frontPlanes[2][0];
+                    this._frontPlanes[2][0] = this._downPlanes[2][2];
+                    this._downPlanes[2][2] = this._downPlanes[2][1];
+                    this._downPlanes[2][1] = this._downPlanes[2][0];
+                    this._downPlanes[2][0] = this._backPlanes[2][0];
+                    this._backPlanes[2][0] = this._backPlanes[2][1];
+                    this._backPlanes[2][1] = this._backPlanes[2][2];
+                    this._backPlanes[2][2] = this._upPlanes[2][0];
+                    this._upPlanes[2][0] = this._upPlanes[2][1];
+                    this._upPlanes[2][1] = this._upPlanes[2][2];
+                    this._upPlanes[2][2] = tempPlane;
+                }
+
+                this._callback = null;
+                callback();
+            };
+        }
+        else {
+            this._callback = function() {
+                for(var i = 0; i < 2; i++) {
+                    var tempPlane = this._leftPlanes[1][0];
+                    this._leftPlanes[1][0] = this._leftPlanes[2][0];
+                    this._leftPlanes[2][0] = this._leftPlanes[2][1];
+                    this._leftPlanes[2][1] = this._leftPlanes[2][2];
+                    this._leftPlanes[2][2] = this._leftPlanes[1][2];
+                    this._leftPlanes[1][2] = this._leftPlanes[0][2];
+                    this._leftPlanes[0][2] = this._leftPlanes[0][1];
+                    this._leftPlanes[0][1] = this._leftPlanes[0][0];
+                    this._leftPlanes[0][0] = tempPlane;
+                }
+                for(var i = 0; i < 3; i++) {
+                    tempPlane = this._upPlanes[2][2];
+                    this._upPlanes[2][2] = this._upPlanes[2][1];
+                    this._upPlanes[2][1] = this._upPlanes[2][0];
+                    this._upPlanes[2][0] = this._backPlanes[2][2];
+                    this._backPlanes[2][2] = this._backPlanes[2][1];
+                    this._backPlanes[2][1] = this._backPlanes[2][0];
+                    this._backPlanes[2][0] = this._downPlanes[2][0];
+                    this._downPlanes[2][0] = this._downPlanes[2][1];
+                    this._downPlanes[2][1] = this._downPlanes[2][2];
+                    this._downPlanes[2][2] = this._frontPlanes[2][0];
+                    this._frontPlanes[2][0] = this._frontPlanes[2][1];
+                    this._frontPlanes[2][1] = this._frontPlanes[2][2];
+                    this._frontPlanes[2][2] = tempPlane;
+                }
+
+                this._callback = null;
+                callback();
+            };
+        }
+
+        this._rotateAroundX(this._leftPlanes[0][0], coeff);
+        this._rotateAroundX(this._leftPlanes[0][1], coeff);
+        this._rotateAroundX(this._leftPlanes[0][2], coeff);
+        this._rotateAroundX(this._leftPlanes[1][0], coeff);
+        this._rotateAroundX(this._leftPlanes[1][1], coeff);
+        this._rotateAroundX(this._leftPlanes[1][2], coeff);
+        this._rotateAroundX(this._leftPlanes[2][0], coeff);
+        this._rotateAroundX(this._leftPlanes[2][1], coeff);
+        this._rotateAroundX(this._leftPlanes[2][2], coeff);
+
+        this._rotateAroundX(this._frontPlanes[2][0], coeff);
+        this._rotateAroundX(this._frontPlanes[2][1], coeff);
+        this._rotateAroundX(this._frontPlanes[2][2], coeff);
+
+        this._rotateAroundX(this._upPlanes[2][0], coeff);
+        this._rotateAroundX(this._upPlanes[2][1], coeff);
+        this._rotateAroundX(this._upPlanes[2][2], coeff);
+
+        this._rotateAroundX(this._backPlanes[2][0], coeff);
+        this._rotateAroundX(this._backPlanes[2][1], coeff);
+        this._rotateAroundX(this._backPlanes[2][2], coeff);
+
+        this._rotateAroundX(this._downPlanes[2][0], coeff);
+        this._rotateAroundX(this._downPlanes[2][1], coeff);
+        this._rotateAroundX(this._downPlanes[2][2], coeff);
+    },
+
+    /**
+     * Turn right face
+     * @param callback
+     * @param reverse : Default false
+     */
+    turnRight : function(callback, reverse) {
+        reverse = reverse || false;
+
+        this._moveBeforeNext = 0;
+        var coeff = -Math.PI / 2;
+        if(reverse) { coeff = -coeff; }
+
+        if(reverse) {
+            this._callback = function() {
+                for(var i = 0; i < 2; i++) {
+                    var tempPlane = this._rightPlanes[1][0];
+                    this._rightPlanes[1][0] = this._rightPlanes[2][0];
+                    this._rightPlanes[2][0] = this._rightPlanes[2][1];
+                    this._rightPlanes[2][1] = this._rightPlanes[2][2];
+                    this._rightPlanes[2][2] = this._rightPlanes[1][2];
+                    this._rightPlanes[1][2] = this._rightPlanes[0][2];
+                    this._rightPlanes[0][2] = this._rightPlanes[0][1];
+                    this._rightPlanes[0][1] = this._rightPlanes[0][0];
+                    this._rightPlanes[0][0] = tempPlane;
+                }
+                for(var i = 0; i < 3; i++) {
+                    tempPlane = this._backPlanes[0][2];
+                    this._backPlanes[0][2] = this._backPlanes[0][1];
+                    this._backPlanes[0][1] = this._backPlanes[0][0];
+                    this._backPlanes[0][0] = this._downPlanes[0][0];
+                    this._downPlanes[0][0] = this._downPlanes[0][1];
+                    this._downPlanes[0][1] = this._downPlanes[0][2];
+                    this._downPlanes[0][2] = this._frontPlanes[0][0];
+                    this._frontPlanes[0][0] = this._frontPlanes[0][1];
+                    this._frontPlanes[0][1] = this._frontPlanes[0][2];
+                    this._frontPlanes[0][2] = this._upPlanes[0][2];
+                    this._upPlanes[0][2] = this._upPlanes[0][1];
+                    this._upPlanes[0][1] = this._upPlanes[0][0];
+                    this._upPlanes[0][0] = tempPlane;
+                }
+
+                this._callback = null;
+                callback();
+            };
+        }
+        else {
+            this._callback = function() {
+                for(var i = 0; i < 2; i++) {
+                    var tempPlane = this._rightPlanes[0][0];
+                    this._rightPlanes[0][0] = this._rightPlanes[0][1];
+                    this._rightPlanes[0][1] = this._rightPlanes[0][2];
+                    this._rightPlanes[0][2] = this._rightPlanes[1][2];
+                    this._rightPlanes[1][2] = this._rightPlanes[2][2];
+                    this._rightPlanes[2][2] = this._rightPlanes[2][1];
+                    this._rightPlanes[2][1] = this._rightPlanes[2][0];
+                    this._rightPlanes[2][0] = this._rightPlanes[1][0];
+                    this._rightPlanes[1][0] = tempPlane;
+                }
+                for(var i = 0; i < 3; i++) {
+                    tempPlane = this._upPlanes[0][0];
+                    this._upPlanes[0][0] = this._upPlanes[0][1];
+                    this._upPlanes[0][1] = this._upPlanes[0][2];
+                    this._upPlanes[0][2] = this._frontPlanes[0][2];
+                    this._frontPlanes[0][2] = this._frontPlanes[0][1];
+                    this._frontPlanes[0][1] = this._frontPlanes[0][0];
+                    this._frontPlanes[0][0] = this._downPlanes[0][2];
+                    this._downPlanes[0][2] = this._downPlanes[0][1];
+                    this._downPlanes[0][1] = this._downPlanes[0][0];
+                    this._downPlanes[0][0] = this._backPlanes[0][0];
+                    this._backPlanes[0][0] = this._backPlanes[0][1];
+                    this._backPlanes[0][1] = this._backPlanes[0][2];
+                    this._backPlanes[0][2] = tempPlane;
+                }
+
+                this._callback = null;
+                callback();
+            };
+        }
+
+        this._rotateAroundX(this._rightPlanes[0][0], coeff);
+        this._rotateAroundX(this._rightPlanes[0][1], coeff);
+        this._rotateAroundX(this._rightPlanes[0][2], coeff);
+        this._rotateAroundX(this._rightPlanes[1][0], coeff);
+        this._rotateAroundX(this._rightPlanes[1][1], coeff);
+        this._rotateAroundX(this._rightPlanes[1][2], coeff);
+        this._rotateAroundX(this._rightPlanes[2][0], coeff);
+        this._rotateAroundX(this._rightPlanes[2][1], coeff);
+        this._rotateAroundX(this._rightPlanes[2][2], coeff);
+
+        this._rotateAroundX(this._frontPlanes[0][0], coeff);
+        this._rotateAroundX(this._frontPlanes[0][1], coeff);
+        this._rotateAroundX(this._frontPlanes[0][2], coeff);
+
+        this._rotateAroundX(this._upPlanes[0][0], coeff);
+        this._rotateAroundX(this._upPlanes[0][1], coeff);
+        this._rotateAroundX(this._upPlanes[0][2], coeff);
+
+        this._rotateAroundX(this._backPlanes[0][0], coeff);
+        this._rotateAroundX(this._backPlanes[0][1], coeff);
+        this._rotateAroundX(this._backPlanes[0][2], coeff);
+
+        this._rotateAroundX(this._downPlanes[0][0], coeff);
+        this._rotateAroundX(this._downPlanes[0][1], coeff);
+        this._rotateAroundX(this._downPlanes[0][2], coeff);
     }
 
 };
