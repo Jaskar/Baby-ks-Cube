@@ -35,10 +35,6 @@ function initScene() {
     Cube.initFaces(scene);
 
     Cube.turnFront();
-    Cube.turnFront();
-    Cube.turnFront();
-    Cube.turnFront();
-    Cube.turnFront();
 
     engine.runRenderLoop(function () {
         Cube.render(engine.getDeltaTime());

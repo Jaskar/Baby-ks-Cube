@@ -22,14 +22,6 @@ Cube = {
                   ['R','R','R'],
                   ['R','R','R']],
 
-    // Color materials
-    _matGreen   : null,
-    _matBlue    : null,
-    _matWhite   : null,
-    _matYellow  : null,
-    _matOrange  : null,
-    _matRed     : null,
-
     // Planes containers (faces)
     _frontPlanes : [[null,null,null],[null,null,null],[null,null,null]],
     _backPlanes  : [[null,null,null],[null,null,null],[null,null,null]],
@@ -45,6 +37,8 @@ Cube = {
     /********* FUNCTIONS *********/
 
     initColors : function(scene) {
+        this._scene = scene;
+
         this._matGreen = new BABYLON.StandardMaterial("green", scene);
         this._matGreen.diffuseColor = new BABYLON.Color3(0, 1, 0);
         this._matGreen.specularColor = new BABYLON.Color3.Black();
@@ -109,10 +103,10 @@ Cube = {
                 this._upPlanes[x][y].position.x = x-1;
                 this._upPlanes[x][y].position.y =  +1.5;
                 this._upPlanes[x][y].position.z = y-1;
-                this._upPlanes[x][y].rotation.x = Math.PI / 2;
+                this._upPlanes[x][y].rotation.x = Math.PI;
                 this._upPlanes[x][y].scaling.x = 0.95;
-                this._upPlanes[x][y].scaling.y = 0.95;
-                this._upPlanes[x][y].scaling.z = 0.01;
+                this._upPlanes[x][y].scaling.y = 0.01;
+                this._upPlanes[x][y].scaling.z = 0.95;
                 this._upPlanes[x][y].material = this._matWhite;
             }
         }
@@ -124,10 +118,10 @@ Cube = {
                 this._downPlanes[x][y].position.x = x-1;
                 this._downPlanes[x][y].position.y =  -1.5;
                 this._downPlanes[x][y].position.z = y-1;
-                this._downPlanes[x][y].rotation.x = -Math.PI / 2;
+                this._downPlanes[x][y].rotation.x = Math.PI;
                 this._downPlanes[x][y].scaling.x = 0.95;
-                this._downPlanes[x][y].scaling.y = 0.95;
-                this._downPlanes[x][y].scaling.z = 0.01;
+                this._downPlanes[x][y].scaling.y = 0.01;
+                this._downPlanes[x][y].scaling.z = 0.95;
                 this._downPlanes[x][y].material = this._matYellow;
             }
         }
@@ -139,10 +133,10 @@ Cube = {
                 this._leftPlanes[x][y].position.x =   1.5;
                 this._leftPlanes[x][y].position.y = y-1;
                 this._leftPlanes[x][y].position.z = x-1;
-                this._leftPlanes[x][y].rotation.y = - Math.PI / 2;
-                this._leftPlanes[x][y].scaling.x = 0.95;
+                this._leftPlanes[x][y].rotation.x = Math.PI;
+                this._leftPlanes[x][y].scaling.x = 0.01;
                 this._leftPlanes[x][y].scaling.y = 0.95;
-                this._leftPlanes[x][y].scaling.z = 0.01;
+                this._leftPlanes[x][y].scaling.z = 0.95;
                 this._leftPlanes[x][y].material = this._matOrange;
             }
         }
@@ -154,10 +148,10 @@ Cube = {
                 this._rightPlanes[x][y].position.x =  -1.5;
                 this._rightPlanes[x][y].position.y = y-1;
                 this._rightPlanes[x][y].position.z = x-1;
-                this._rightPlanes[x][y].rotation.y = Math.PI / 2;
-                this._rightPlanes[x][y].scaling.x = 0.95;
+                this._rightPlanes[x][y].rotation.y = Math.PI;
+                this._rightPlanes[x][y].scaling.x = 0.01;
                 this._rightPlanes[x][y].scaling.y = 0.95;
-                this._rightPlanes[x][y].scaling.z = 0.01;
+                this._rightPlanes[x][y].scaling.z = 0.95;
                 this._rightPlanes[x][y].material = this._matRed;
             }
         }
@@ -178,14 +172,46 @@ Cube = {
         );
         var actualRotation = Math.atan2(object.position.x, object.position.y);
 
-        console.log(actualRotation * 180 / Math.PI);
-
         object.rotate(BABYLON.Axis.Z, angle, BABYLON.Space.world);
         object.position = new BABYLON.Vector3(
             Math.sin(actualRotation + angle) * distance,
             Math.cos(actualRotation + angle) * distance,
             object.position.z
         );
+
+        //var animationRotation = new BABYLON.Animation(
+        //    "roationZ",
+        //    "rotation.z",
+        //    90,
+        //    BABYLON.Animation.ANIMATIONTYPE_FLOAT,
+        //    BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
+        //);
+        //
+        //// An array with all animation keys
+        //var keys = [];
+        //keys.push({
+        //    frame: 0,
+        //    value: 1
+        //});
+        //keys.push({
+        //    frame: 25,
+        //    value: 0.25
+        //});
+        //keys.push({
+        //    frame: 50,
+        //    value: 0.5
+        //});
+        //keys.push({
+        //    frame: 75,
+        //    value: 0.75
+        //});
+        //keys.push({
+        //    frame: 100,
+        //    value: 1
+        //});
+        //
+        //animationRotation.setKeys(keys);
+        //object.animations.push(animationRotation);
     },
 
     // Turn front face
@@ -194,17 +220,19 @@ Cube = {
     },
     _turnFrontBy : function(coeff, that) {
 
+        // Center of left face
         var pivot = new BABYLON.Vector3(0,0,0);
+        // Rotation
         var rotation = Math.PI/2;
-        var space = BABYLON.Space.world;
+
+        // Rotation coeff
         coeff /= 1500;
         coeff *= rotation;
         that._totalCoeff += coeff;
 
-        if(that._totalCoeff > Math.PI/2) {
+        if(that._totalCoeff > rotation) {
             that._totalCoeff = 0;
             that._registeredRender.shift();
-            console.log(that._registeredRender);
             return;
         }
 
@@ -218,6 +246,23 @@ Cube = {
         that._rotateAroundZ(that._frontPlanes[2][1], pivot, coeff);
         that._rotateAroundZ(that._frontPlanes[2][2], pivot, coeff);
 
+        that._rotateAroundZ(that._rightPlanes[2][0], pivot, coeff);
+        that._rotateAroundZ(that._rightPlanes[2][1], pivot, coeff);
+        that._rotateAroundZ(that._rightPlanes[2][2], pivot, coeff);
+
+        that._rotateAroundZ(that._upPlanes[0][2], pivot, coeff);
+        that._rotateAroundZ(that._upPlanes[1][2], pivot, coeff);
+        that._rotateAroundZ(that._upPlanes[2][2], pivot, coeff);
+
+        that._rotateAroundZ(that._leftPlanes[2][0], pivot, coeff);
+        that._rotateAroundZ(that._leftPlanes[2][1], pivot, coeff);
+        that._rotateAroundZ(that._leftPlanes[2][2], pivot, coeff);
+
+        that._rotateAroundZ(that._downPlanes[0][2], pivot, coeff);
+        that._rotateAroundZ(that._downPlanes[1][2], pivot, coeff);
+        that._rotateAroundZ(that._downPlanes[2][2], pivot, coeff);
+
+        //that._scene.beginAnimation(that._frontPlanes[0][0], 0, 100, false);
 
     }
 
