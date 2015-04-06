@@ -31,7 +31,7 @@ Cube = {
     _rightPlanes : [[null,null,null],[null,null,null],[null,null,null]],
 
     _stateBeforeMove : [],
-    _speed : 75,
+    _speed : 50,
 
 
     /********* FUNCTIONS *********/
@@ -217,6 +217,81 @@ Cube = {
         animationKeys = [
             { frame : 0, value : (object.rotation.x) },
             { frame : 100, value : (object.rotation.x + angle) }
+        ];
+        animationRotation.setKeys(animationKeys);
+
+        object.animations.push(animationRotation);
+
+        var that = this;
+        this._scene.beginAnimation(object, 0, 100, false, 1, function() {
+            that._moveBeforeNext --;
+            if(that._moveBeforeNext == 0) {
+                // Without timeout there is a bug
+                setTimeout(function() {
+                    that._callback();
+                }, 2);
+            }
+        });
+        this._moveBeforeNext ++;
+    },
+
+    // Function to rotate something around Y Axis
+    _rotateAroundY : function(object, angle, reverseRotation) {
+        reverseRotation = reverseRotation || false;
+
+        object.animations = [];
+        var distance = Math.sqrt(
+            Math.pow((object.position.x), 2) +
+            Math.pow((object.position.z), 2)
+        );
+        var actualRotation = Math.atan2(object.position.z, object.position.x);
+
+        var animationKeys = [];
+        var animationPosition = new BABYLON.Animation(
+            "animationPosition",
+            "position",
+            this._speed,
+            BABYLON.Animation.ANIMATIONTYPE_VECTOR3,
+            BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
+        );
+        animationKeys = [];
+        animationKeys.push({
+            frame: 0,
+            value: new BABYLON.Vector3(
+                object.position.x,
+                object.position.y,
+                object.position.z
+            )
+        });
+        for(var i = 1; i <= 100; i++) {
+            var stepAngle = (angle / 100) * i;
+            animationKeys.push({
+                frame : i,
+                value : new BABYLON.Vector3(
+                    Math.cos(actualRotation + stepAngle) * distance,
+                    object.position.y,
+                    Math.sin(actualRotation + stepAngle) * distance
+                )
+            });
+        }
+        animationPosition.setKeys(animationKeys);
+
+        object.animations.push(animationPosition);
+
+        var animationRotation = new BABYLON.Animation(
+            "animationRotation",
+            "rotation.y",
+            this._speed,
+            BABYLON.Animation.ANIMATIONTYPE_FLOAT,
+            BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
+        );
+
+        if(reverseRotation) {
+            angle *= -1;
+        }
+        animationKeys = [
+            { frame : 0, value : (object.rotation.y) },
+            { frame : 100, value : (object.rotation.y + angle) }
         ];
         animationRotation.setKeys(animationKeys);
 
@@ -732,6 +807,218 @@ Cube = {
         this._rotateAroundX(this._downPlanes[0][0], coeff);
         this._rotateAroundX(this._downPlanes[0][1], coeff);
         this._rotateAroundX(this._downPlanes[0][2], coeff);
+    },
+
+    /**
+     * Turn up face
+     * @param callback
+     * @param reverse : Default false
+     */
+    turnUp : function(callback, reverse) {
+        reverse = reverse || false;
+
+        this._moveBeforeNext = 0;
+        var coeff = -Math.PI / 2;
+        if(reverse) { coeff = -coeff; }
+
+        if(reverse) {
+            this._callback = function() {
+                for(var i = 0; i < 2; i++) {
+                    var tempPlane = this._upPlanes[0][0];
+                    this._upPlanes[0][0] = this._upPlanes[0][1];
+                    this._upPlanes[0][1] = this._upPlanes[0][2];
+                    this._upPlanes[0][2] = this._upPlanes[1][2];
+                    this._upPlanes[1][2] = this._upPlanes[2][2];
+                    this._upPlanes[2][2] = this._upPlanes[2][1];
+                    this._upPlanes[2][1] = this._upPlanes[2][0];
+                    this._upPlanes[2][0] = this._upPlanes[1][0];
+                    this._upPlanes[1][0] = tempPlane;
+                }
+                for(var i = 0; i < 3; i++) {
+                    tempPlane = this._rightPlanes[0][2];
+                    this._rightPlanes[0][2] = this._rightPlanes[1][2];
+                    this._rightPlanes[1][2] = this._rightPlanes[2][2];
+                    this._rightPlanes[2][2] = this._frontPlanes[0][2];
+                    this._frontPlanes[0][2] = this._frontPlanes[1][2];
+                    this._frontPlanes[1][2] = this._frontPlanes[2][2];
+                    this._frontPlanes[2][2] = this._leftPlanes[2][2];
+                    this._leftPlanes[2][2] = this._leftPlanes[1][2];
+                    this._leftPlanes[1][2] = this._leftPlanes[0][2];
+                    this._leftPlanes[0][2] = this._backPlanes[2][2];
+                    this._backPlanes[2][2] = this._backPlanes[1][2];
+                    this._backPlanes[1][2] = this._backPlanes[0][2];
+                    this._backPlanes[0][2] = tempPlane;
+                }
+
+                this._callback = null;
+                callback();
+            };
+        }
+        else {
+            this._callback = function() {
+                for(var i = 0; i < 2; i++) {
+                    var tempPlane = this._upPlanes[0][0];
+                    this._upPlanes[0][0] = this._upPlanes[1][0];
+                    this._upPlanes[1][0] = this._upPlanes[2][0];
+                    this._upPlanes[2][0] = this._upPlanes[2][1];
+                    this._upPlanes[2][1] = this._upPlanes[2][2];
+                    this._upPlanes[2][2] = this._upPlanes[1][2];
+                    this._upPlanes[1][2] = this._upPlanes[0][2];
+                    this._upPlanes[0][2] = this._upPlanes[0][1];
+                    this._upPlanes[0][1] = tempPlane;
+                }
+                for(var i = 0; i < 3; i++) {
+                    tempPlane = this._rightPlanes[2][2];
+                    this._rightPlanes[2][2] = this._rightPlanes[1][2];
+                    this._rightPlanes[1][2] = this._rightPlanes[0][2];
+                    this._rightPlanes[0][2] = this._backPlanes[0][2];
+                    this._backPlanes[0][2] = this._backPlanes[1][2];
+                    this._backPlanes[1][2] = this._backPlanes[2][2];
+                    this._backPlanes[2][2] = this._leftPlanes[0][2];
+                    this._leftPlanes[0][2] = this._leftPlanes[1][2];
+                    this._leftPlanes[1][2] = this._leftPlanes[2][2];
+                    this._leftPlanes[2][2] = this._frontPlanes[2][2];
+                    this._frontPlanes[2][2] = this._frontPlanes[1][2];
+                    this._frontPlanes[1][2] = this._frontPlanes[0][2];
+                    this._frontPlanes[0][2] = tempPlane;
+                }
+
+                this._callback = null;
+                callback();
+            };
+        }
+
+        this._rotateAroundY(this._upPlanes[0][0], coeff, true);
+        this._rotateAroundY(this._upPlanes[0][1], coeff, true);
+        this._rotateAroundY(this._upPlanes[0][2], coeff, true);
+        this._rotateAroundY(this._upPlanes[1][0], coeff, true);
+        this._rotateAroundY(this._upPlanes[1][1], coeff, true);
+        this._rotateAroundY(this._upPlanes[1][2], coeff, true);
+        this._rotateAroundY(this._upPlanes[2][0], coeff, true);
+        this._rotateAroundY(this._upPlanes[2][1], coeff, true);
+        this._rotateAroundY(this._upPlanes[2][2], coeff, true);
+
+        this._rotateAroundY(this._rightPlanes[0][2], coeff, true);
+        this._rotateAroundY(this._rightPlanes[1][2], coeff, true);
+        this._rotateAroundY(this._rightPlanes[2][2], coeff, true);
+
+        this._rotateAroundY(this._backPlanes[0][2], coeff, true);
+        this._rotateAroundY(this._backPlanes[1][2], coeff, true);
+        this._rotateAroundY(this._backPlanes[2][2], coeff, true);
+
+        this._rotateAroundY(this._leftPlanes[0][2], coeff, true);
+        this._rotateAroundY(this._leftPlanes[1][2], coeff, true);
+        this._rotateAroundY(this._leftPlanes[2][2], coeff, true);
+
+        this._rotateAroundY(this._frontPlanes[0][2], coeff, true);
+        this._rotateAroundY(this._frontPlanes[1][2], coeff, true);
+        this._rotateAroundY(this._frontPlanes[2][2], coeff, true);
+    },
+
+    /**
+     * Turn down face
+     * @param callback
+     * @param reverse : Default false
+     */
+    turnDown : function(callback, reverse) {
+        reverse = reverse || false;
+
+        this._moveBeforeNext = 0;
+        var coeff = Math.PI / 2;
+        if(reverse) { coeff = -coeff; }
+
+        if(reverse) {
+            this._callback = function() {
+                for(var i = 0; i < 2; i++) {
+                    var tempPlane = this._upPlanes[0][0];
+                    this._upPlanes[0][0] = this._upPlanes[0][1];
+                    this._upPlanes[0][1] = this._upPlanes[0][2];
+                    this._upPlanes[0][2] = this._upPlanes[1][2];
+                    this._upPlanes[1][2] = this._upPlanes[2][2];
+                    this._upPlanes[2][2] = this._upPlanes[2][1];
+                    this._upPlanes[2][1] = this._upPlanes[2][0];
+                    this._upPlanes[2][0] = this._upPlanes[1][0];
+                    this._upPlanes[1][0] = tempPlane;
+                }
+                for(var i = 0; i < 3; i++) {
+                    tempPlane = this._rightPlanes[0][2];
+                    this._rightPlanes[0][2] = this._rightPlanes[1][2];
+                    this._rightPlanes[1][2] = this._rightPlanes[2][2];
+                    this._rightPlanes[2][2] = this._frontPlanes[0][2];
+                    this._frontPlanes[0][2] = this._frontPlanes[1][2];
+                    this._frontPlanes[1][2] = this._frontPlanes[2][2];
+                    this._frontPlanes[2][2] = this._leftPlanes[2][2];
+                    this._leftPlanes[2][2] = this._leftPlanes[1][2];
+                    this._leftPlanes[1][2] = this._leftPlanes[0][2];
+                    this._leftPlanes[0][2] = this._backPlanes[2][2];
+                    this._backPlanes[2][2] = this._backPlanes[1][2];
+                    this._backPlanes[1][2] = this._backPlanes[0][2];
+                    this._backPlanes[0][2] = tempPlane;
+                }
+
+                this._callback = null;
+                callback();
+            };
+        }
+        else {
+            this._callback = function() {
+                for(var i = 0; i < 2; i++) {
+                    var tempPlane = this._upPlanes[0][0];
+                    this._upPlanes[0][0] = this._upPlanes[1][0];
+                    this._upPlanes[1][0] = this._upPlanes[2][0];
+                    this._upPlanes[2][0] = this._upPlanes[2][1];
+                    this._upPlanes[2][1] = this._upPlanes[2][2];
+                    this._upPlanes[2][2] = this._upPlanes[1][2];
+                    this._upPlanes[1][2] = this._upPlanes[0][2];
+                    this._upPlanes[0][2] = this._upPlanes[0][1];
+                    this._upPlanes[0][1] = tempPlane;
+                }
+                for(var i = 0; i < 3; i++) {
+                    tempPlane = this._rightPlanes[2][2];
+                    this._rightPlanes[2][2] = this._rightPlanes[1][2];
+                    this._rightPlanes[1][2] = this._rightPlanes[0][2];
+                    this._rightPlanes[0][2] = this._backPlanes[0][2];
+                    this._backPlanes[0][2] = this._backPlanes[1][2];
+                    this._backPlanes[1][2] = this._backPlanes[2][2];
+                    this._backPlanes[2][2] = this._leftPlanes[0][2];
+                    this._leftPlanes[0][2] = this._leftPlanes[1][2];
+                    this._leftPlanes[1][2] = this._leftPlanes[2][2];
+                    this._leftPlanes[2][2] = this._frontPlanes[2][2];
+                    this._frontPlanes[2][2] = this._frontPlanes[1][2];
+                    this._frontPlanes[1][2] = this._frontPlanes[0][2];
+                    this._frontPlanes[0][2] = tempPlane;
+                }
+
+                this._callback = null;
+                callback();
+            };
+        }
+
+        this._rotateAroundY(this._downPlanes[0][0], coeff, true);
+        this._rotateAroundY(this._downPlanes[0][1], coeff, true);
+        this._rotateAroundY(this._downPlanes[0][2], coeff, true);
+        this._rotateAroundY(this._downPlanes[1][0], coeff, true);
+        this._rotateAroundY(this._downPlanes[1][1], coeff, true);
+        this._rotateAroundY(this._downPlanes[1][2], coeff, true);
+        this._rotateAroundY(this._downPlanes[2][0], coeff, true);
+        this._rotateAroundY(this._downPlanes[2][1], coeff, true);
+        this._rotateAroundY(this._downPlanes[2][2], coeff, true);
+
+        this._rotateAroundY(this._rightPlanes[0][0], coeff, true);
+        this._rotateAroundY(this._rightPlanes[1][0], coeff, true);
+        this._rotateAroundY(this._rightPlanes[2][0], coeff, true);
+
+        this._rotateAroundY(this._backPlanes[0][0], coeff, true);
+        this._rotateAroundY(this._backPlanes[1][0], coeff, true);
+        this._rotateAroundY(this._backPlanes[2][0], coeff, true);
+
+        this._rotateAroundY(this._leftPlanes[0][0], coeff, true);
+        this._rotateAroundY(this._leftPlanes[1][0], coeff, true);
+        this._rotateAroundY(this._leftPlanes[2][0], coeff, true);
+
+        this._rotateAroundY(this._frontPlanes[0][0], coeff, true);
+        this._rotateAroundY(this._frontPlanes[1][0], coeff, true);
+        this._rotateAroundY(this._frontPlanes[2][0], coeff, true);
     }
 
 };
