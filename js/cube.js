@@ -31,7 +31,7 @@ Cube = {
     _rightPlanes : [[null,null,null],[null,null,null],[null,null,null]],
 
     _stateBeforeMove : [],
-    _speed : 50,
+    _speed : 200,
 
 
     /********* FUNCTIONS *********/
@@ -131,7 +131,7 @@ Cube = {
         // Left
         for(var x = 0; x < 3; x++) {
             for(var y = 0; y < 3; y++) {
-                this._leftPlanes[x][y] = BABYLON.Mesh.CreateBox("down" + x + y, 1, scene);
+                this._leftPlanes[x][y] = BABYLON.Mesh.CreateBox("left" + x + y, 1, scene);
                 this._leftPlanes[x][y].position.x =   1.5;
                 this._leftPlanes[x][y].position.y = y-1;
                 this._leftPlanes[x][y].position.z = x-1;
@@ -146,7 +146,7 @@ Cube = {
         // Right
         for(var x = 0; x < 3; x++) {
             for(var y = 0; y < 3; y++) {
-                this._rightPlanes[x][y] = BABYLON.Mesh.CreateBox("down" + x + y, 1, scene);
+                this._rightPlanes[x][y] = BABYLON.Mesh.CreateBox("right" + x + y, 1, scene);
                 this._rightPlanes[x][y].position.x =  -1.5;
                 this._rightPlanes[x][y].position.y = y-1;
                 this._rightPlanes[x][y].position.z = x-1;
@@ -397,8 +397,8 @@ Cube = {
         var coeff = -Math.PI / 2;
         if(reverse) { coeff = -coeff; }
 
-        if(reverse) {
-            this._callback = function() {
+        this._callback = function() {
+            if(reverse) {
                 for(var i = 0; i < 2; i++) {
                     var tempPlane = this._frontPlanes[0][0];
                     this._frontPlanes[0][0] = this._frontPlanes[1][0];
@@ -425,13 +425,8 @@ Cube = {
                     this._upPlanes[1][2] = this._upPlanes[0][2];
                     this._upPlanes[0][2] = tempPlane;
                 }
-
-                this._callback = null;
-                callback();
-            };
-        }
-        else {
-            this._callback = function() {
+            }
+            else {
                 for(var i = 0; i < 2; i++) {
                     var tempPlane = this._frontPlanes[0][0];
                     this._frontPlanes[0][0] = this._frontPlanes[0][1];
@@ -458,11 +453,56 @@ Cube = {
                     this._rightPlanes[2][0] = this._rightPlanes[2][1];
                     this._rightPlanes[2][1] = tempPlane;
                 }
+            }
 
-                this._callback = null;
-                callback();
-            };
-        }
+            for(var x = 0; x < 3; x++) {
+                for(var y = 0; y < 3; y++) {
+                    this._frontPlanes[x][y].rotation.z -= coeff;
+                }
+            }
+            this._rightPlanes[2][0].rotation.z -= coeff;
+            this._rightPlanes[2][0].scaling.x = 0.01;
+            this._rightPlanes[2][0].scaling.y = 0.95;
+            this._rightPlanes[2][1].rotation.z -= coeff;
+            this._rightPlanes[2][1].scaling.x = 0.01;
+            this._rightPlanes[2][1].scaling.y = 0.95;
+            this._rightPlanes[2][2].rotation.z -= coeff;
+            this._rightPlanes[2][2].scaling.x = 0.01;
+            this._rightPlanes[2][2].scaling.y = 0.95;
+
+            this._upPlanes[0][2].rotation.z -= coeff;
+            this._upPlanes[0][2].scaling.y = 0.01;
+            this._upPlanes[0][2].scaling.x = 0.95;
+            this._upPlanes[1][2].rotation.z -= coeff;
+            this._upPlanes[1][2].scaling.y = 0.01;
+            this._upPlanes[1][2].scaling.x = 0.95;
+            this._upPlanes[2][2].rotation.z -= coeff;
+            this._upPlanes[2][2].scaling.y = 0.01;
+            this._upPlanes[2][2].scaling.x = 0.95;
+
+            this._leftPlanes[2][0].rotation.z -= coeff;
+            this._leftPlanes[2][0].scaling.x = 0.01;
+            this._leftPlanes[2][0].scaling.y = 0.95;
+            this._leftPlanes[2][1].rotation.z -= coeff;
+            this._leftPlanes[2][1].scaling.x = 0.01;
+            this._leftPlanes[2][1].scaling.y = 0.95;
+            this._leftPlanes[2][2].rotation.z -= coeff;
+            this._leftPlanes[2][2].scaling.x = 0.01;
+            this._leftPlanes[2][2].scaling.y = 0.95;
+
+            this._downPlanes[0][2].rotation.z -= coeff;
+            this._downPlanes[0][2].scaling.y = 0.01;
+            this._downPlanes[0][2].scaling.x = 0.95;
+            this._downPlanes[1][2].rotation.z -= coeff;
+            this._downPlanes[1][2].scaling.y = 0.01;
+            this._downPlanes[1][2].scaling.x = 0.95;
+            this._downPlanes[2][2].rotation.z -= coeff;
+            this._downPlanes[2][2].scaling.y = 0.01;
+            this._downPlanes[2][2].scaling.x = 0.95;
+
+            this._callback = null;
+            callback();
+        };
 
         this._rotateAroundZ(this._frontPlanes[0][0], coeff, true);
         this._rotateAroundZ(this._frontPlanes[0][1], coeff, true);
@@ -503,9 +543,9 @@ Cube = {
         var coeff = Math.PI / 2;
         if(reverse) { coeff = -coeff; }
 
-        if(reverse) {
-            this._callback = function() {
-                for(var i = 0; i < 2; i++) {
+        this._callback = function() {
+            if (reverse) {
+                for (var i = 0; i < 2; i++) {
                     var tempPlane = this._backPlanes[0][0];
                     this._backPlanes[0][0] = this._backPlanes[0][1];
                     this._backPlanes[0][1] = this._backPlanes[0][2];
@@ -516,7 +556,7 @@ Cube = {
                     this._backPlanes[2][0] = this._backPlanes[1][0];
                     this._backPlanes[1][0] = tempPlane;
                 }
-                for(var i = 0; i < 3; i++) {
+                for (var i = 0; i < 3; i++) {
                     tempPlane = this._rightPlanes[0][0];
                     this._rightPlanes[0][0] = this._rightPlanes[0][1];
                     this._rightPlanes[0][1] = this._rightPlanes[0][2];
@@ -531,14 +571,9 @@ Cube = {
                     this._downPlanes[1][0] = this._downPlanes[0][0]
                     this._downPlanes[0][0] = tempPlane;
                 }
-
-                this._callback = null;
-                callback();
-            };
-        }
-        else {
-            this._callback = function() {
-                for(var i = 0; i < 2; i++) {
+            }
+            else {
+                for (var i = 0; i < 2; i++) {
                     var tempPlane = this._backPlanes[0][2];
                     this._backPlanes[0][2] = this._backPlanes[0][1];
                     this._backPlanes[0][1] = this._backPlanes[0][0];
@@ -549,7 +584,7 @@ Cube = {
                     this._backPlanes[2][2] = this._backPlanes[1][2];
                     this._backPlanes[1][2] = tempPlane;
                 }
-                for(var i = 0; i < 3; i++) {
+                for (var i = 0; i < 3; i++) {
                     tempPlane = this._downPlanes[0][0];
                     this._downPlanes[0][0] = this._downPlanes[1][0];
                     this._downPlanes[1][0] = this._downPlanes[2][0];
@@ -564,11 +599,57 @@ Cube = {
                     this._rightPlanes[0][1] = this._rightPlanes[0][0];
                     this._rightPlanes[0][0] = tempPlane;
                 }
+            }
 
-                this._callback = null;
-                callback();
-            };
-        }
+            for(var x = 0; x < 3; x++) {
+                for(var y = 0; y < 3; y++) {
+                    this._backPlanes[x][y].rotation.z -= coeff;
+                }
+            }
+
+            this._rightPlanes[0][0].rotation.z -= coeff;
+            this._rightPlanes[0][0].scaling.x = 0.01;
+            this._rightPlanes[0][0].scaling.y = 0.95;
+            this._rightPlanes[0][1].rotation.z -= coeff;
+            this._rightPlanes[0][1].scaling.x = 0.01;
+            this._rightPlanes[0][1].scaling.y = 0.95;
+            this._rightPlanes[0][2].rotation.z -= coeff;
+            this._rightPlanes[0][2].scaling.x = 0.01;
+            this._rightPlanes[0][2].scaling.y = 0.95;
+
+            this._upPlanes[0][0].rotation.z -= coeff;
+            this._upPlanes[0][0].scaling.y = 0.01;
+            this._upPlanes[0][0].scaling.x = 0.95;
+            this._upPlanes[1][0].rotation.z -= coeff;
+            this._upPlanes[1][0].scaling.y = 0.01;
+            this._upPlanes[1][0].scaling.x = 0.95;
+            this._upPlanes[2][0].rotation.z -= coeff;
+            this._upPlanes[2][0].scaling.y = 0.01;
+            this._upPlanes[2][0].scaling.x = 0.95;
+
+            this._leftPlanes[0][0].rotation.z -= coeff;
+            this._leftPlanes[0][0].scaling.x = 0.01;
+            this._leftPlanes[0][0].scaling.y = 0.95;
+            this._leftPlanes[0][1].rotation.z -= coeff;
+            this._leftPlanes[0][1].scaling.x = 0.01;
+            this._leftPlanes[0][1].scaling.y = 0.95;
+            this._leftPlanes[0][2].rotation.z -= coeff;
+            this._leftPlanes[0][2].scaling.x = 0.01;
+            this._leftPlanes[0][2].scaling.y = 0.95;
+
+            this._downPlanes[0][0].rotation.z -= coeff;
+            this._downPlanes[0][0].scaling.y = 0.01;
+            this._downPlanes[0][0].scaling.x = 0.95;
+            this._downPlanes[1][0].rotation.z -= coeff;
+            this._downPlanes[1][0].scaling.y = 0.01;
+            this._downPlanes[1][0].scaling.x = 0.95;
+            this._downPlanes[2][0].rotation.z -= coeff;
+            this._downPlanes[2][0].scaling.y = 0.01;
+            this._downPlanes[2][0].scaling.x = 0.95;
+
+            this._callback = null;
+            callback();
+        };
 
         this._rotateAroundZ(this._backPlanes[0][0], coeff, true);
         this._rotateAroundZ(this._backPlanes[0][1], coeff, true);
@@ -609,9 +690,9 @@ Cube = {
         var coeff = Math.PI / 2;
         if(reverse) { coeff = -coeff; }
 
-        if(reverse) {
-            this._callback = function() {
-                for(var i = 0; i < 2; i++) {
+        this._callback = function() {
+            if (reverse) {
+                for (var i = 0; i < 2; i++) {
                     var tempPlane = this._leftPlanes[0][0];
                     this._leftPlanes[0][0] = this._leftPlanes[0][1];
                     this._leftPlanes[0][1] = this._leftPlanes[0][2];
@@ -622,7 +703,7 @@ Cube = {
                     this._leftPlanes[2][0] = this._leftPlanes[1][0];
                     this._leftPlanes[1][0] = tempPlane;
                 }
-                for(var i = 0; i < 3; i++) {
+                for (var i = 0; i < 3; i++) {
                     tempPlane = this._frontPlanes[2][2];
                     this._frontPlanes[2][2] = this._frontPlanes[2][1];
                     this._frontPlanes[2][1] = this._frontPlanes[2][0];
@@ -637,14 +718,9 @@ Cube = {
                     this._upPlanes[2][1] = this._upPlanes[2][2];
                     this._upPlanes[2][2] = tempPlane;
                 }
-
-                this._callback = null;
-                callback();
-            };
-        }
-        else {
-            this._callback = function() {
-                for(var i = 0; i < 2; i++) {
+            }
+            else {
+                for (var i = 0; i < 2; i++) {
                     var tempPlane = this._leftPlanes[1][0];
                     this._leftPlanes[1][0] = this._leftPlanes[2][0];
                     this._leftPlanes[2][0] = this._leftPlanes[2][1];
@@ -655,7 +731,7 @@ Cube = {
                     this._leftPlanes[0][1] = this._leftPlanes[0][0];
                     this._leftPlanes[0][0] = tempPlane;
                 }
-                for(var i = 0; i < 3; i++) {
+                for (var i = 0; i < 3; i++) {
                     tempPlane = this._upPlanes[2][2];
                     this._upPlanes[2][2] = this._upPlanes[2][1];
                     this._upPlanes[2][1] = this._upPlanes[2][0];
@@ -670,11 +746,35 @@ Cube = {
                     this._frontPlanes[2][1] = this._frontPlanes[2][2];
                     this._frontPlanes[2][2] = tempPlane;
                 }
+            }
 
-                this._callback = null;
-                callback();
-            };
-        }
+            for(var x = 0; x < 3; x++) {
+                for(var y = 0; y < 3; y++) {
+                    this._leftPlanes[x][y].rotation.x -= coeff;
+                }
+            }
+
+            for(var i = 0; i < 3; i++) {
+                this._frontPlanes[2][i].rotation.x -= coeff;
+                this._frontPlanes[2][i].scaling.z = 0.01;
+                this._frontPlanes[2][i].scaling.y = 0.95;
+
+                this._upPlanes[2][i].rotation.x -= coeff;
+                this._upPlanes[2][i].scaling.y = 0.01;
+                this._upPlanes[2][i].scaling.z = 0.95;
+
+                this._backPlanes[2][i].rotation.x -= coeff;
+                this._backPlanes[2][i].scaling.z = 0.01;
+                this._backPlanes[2][i].scaling.y = 0.95;
+
+                this._downPlanes[2][i].rotation.x -= coeff;
+                this._downPlanes[2][i].scaling.y = 0.01;
+                this._downPlanes[2][i].scaling.z = 0.95;
+            }
+
+            this._callback = null;
+            callback();
+        };
 
         this._rotateAroundX(this._leftPlanes[0][0], coeff);
         this._rotateAroundX(this._leftPlanes[0][1], coeff);
@@ -715,9 +815,9 @@ Cube = {
         var coeff = -Math.PI / 2;
         if(reverse) { coeff = -coeff; }
 
-        if(reverse) {
-            this._callback = function() {
-                for(var i = 0; i < 2; i++) {
+        this._callback = function() {
+            if (reverse) {
+                for (var i = 0; i < 2; i++) {
                     var tempPlane = this._rightPlanes[1][0];
                     this._rightPlanes[1][0] = this._rightPlanes[2][0];
                     this._rightPlanes[2][0] = this._rightPlanes[2][1];
@@ -728,7 +828,7 @@ Cube = {
                     this._rightPlanes[0][1] = this._rightPlanes[0][0];
                     this._rightPlanes[0][0] = tempPlane;
                 }
-                for(var i = 0; i < 3; i++) {
+                for (var i = 0; i < 3; i++) {
                     tempPlane = this._backPlanes[0][2];
                     this._backPlanes[0][2] = this._backPlanes[0][1];
                     this._backPlanes[0][1] = this._backPlanes[0][0];
@@ -743,14 +843,9 @@ Cube = {
                     this._upPlanes[0][1] = this._upPlanes[0][0];
                     this._upPlanes[0][0] = tempPlane;
                 }
-
-                this._callback = null;
-                callback();
-            };
-        }
-        else {
-            this._callback = function() {
-                for(var i = 0; i < 2; i++) {
+            }
+            else {
+                for (var i = 0; i < 2; i++) {
                     var tempPlane = this._rightPlanes[0][0];
                     this._rightPlanes[0][0] = this._rightPlanes[0][1];
                     this._rightPlanes[0][1] = this._rightPlanes[0][2];
@@ -761,7 +856,7 @@ Cube = {
                     this._rightPlanes[2][0] = this._rightPlanes[1][0];
                     this._rightPlanes[1][0] = tempPlane;
                 }
-                for(var i = 0; i < 3; i++) {
+                for (var i = 0; i < 3; i++) {
                     tempPlane = this._upPlanes[0][0];
                     this._upPlanes[0][0] = this._upPlanes[0][1];
                     this._upPlanes[0][1] = this._upPlanes[0][2];
@@ -776,10 +871,34 @@ Cube = {
                     this._backPlanes[0][1] = this._backPlanes[0][2];
                     this._backPlanes[0][2] = tempPlane;
                 }
+            }
 
-                this._callback = null;
-                callback();
-            };
+            for(var x = 0; x < 3; x++) {
+                for(var y = 0; y < 3; y++) {
+                    this._rightPlanes[x][y].rotation.x -= coeff;
+                }
+            }
+
+            for(var i = 0; i < 3; i++) {
+                this._frontPlanes[0][i].rotation.x -= coeff;
+                this._frontPlanes[0][i].scaling.z = 0.01;
+                this._frontPlanes[0][i].scaling.y = 0.95;
+
+                this._upPlanes[0][i].rotation.x -= coeff;
+                this._upPlanes[0][i].scaling.y = 0.01;
+                this._upPlanes[0][i].scaling.z = 0.95;
+
+                this._backPlanes[0][i].rotation.x -= coeff;
+                this._backPlanes[0][i].scaling.z = 0.01;
+                this._backPlanes[0][i].scaling.y = 0.95;
+
+                this._downPlanes[0][i].rotation.x -= coeff;
+                this._downPlanes[0][i].scaling.y = 0.01;
+                this._downPlanes[0][i].scaling.z = 0.95;
+            }
+
+            this._callback = null;
+            callback();
         }
 
         this._rotateAroundX(this._rightPlanes[0][0], coeff);

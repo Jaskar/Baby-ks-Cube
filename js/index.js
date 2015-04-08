@@ -37,8 +37,10 @@ function initScene() {
     var moves = [];
 
     var nextMove = function() {
-        moves[0]();
-        moves.shift();
+        if(typeof moves[0] !== 'undefined') {
+            moves[0]();
+            moves.shift();
+        }
     };
 
     var sens = false;
@@ -104,14 +106,19 @@ function initScene() {
         }, true);
     };
 
-    //moves.push(turnRight);
-    //moves.push(turnUp);
-    //moves.push(turnRight);
-    //moves.push(turnUp);
-    moves.push(turnDown);
+    moves.push(turnFront);
+    moves.push(turnRight);
+    moves.push(turnBack);
+    moves.push(turnLeft);
+    moves.push(turnRightReverse);
+    moves.push(turnBackReverse);
+    moves.push(turnFrontReverse);
+    moves.push(turnLeftReverse);
     nextMove();
 
     engine.runRenderLoop(function () {
         scene.render();
     });
+
+    scene.debugLayer.show();
 }
