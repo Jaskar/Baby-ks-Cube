@@ -36,10 +36,14 @@ function initScene() {
 
     var moves = [];
 
+    var isTurning = true;
+
     var nextMove = function() {
         if(typeof moves[0] !== 'undefined') {
             moves[0]();
             moves.shift();
+        } else {
+            isTurning = false;
         }
     };
 
@@ -106,19 +110,110 @@ function initScene() {
         }, true);
     };
 
-    moves.push(turnFront);
-    moves.push(turnRight);
-    moves.push(turnBack);
-    moves.push(turnLeft);
-    moves.push(turnRightReverse);
-    moves.push(turnBackReverse);
-    moves.push(turnFrontReverse);
-    moves.push(turnLeftReverse);
+    document.getElementById("button_left").addEventListener('click', function() {
+        moves.push(turnLeft);
+        if(!isTurning) { nextMove() };
+    });
+    document.getElementById("button_leftprime").addEventListener('click', function() {
+        moves.push(turnLeftReverse);
+        if(!isTurning) { nextMove() };
+    });
+    document.getElementById("button_right").addEventListener('click', function() {
+        moves.push(turnRight);
+        if(!isTurning) { nextMove() };
+    });
+    document.getElementById("button_rightprime").addEventListener('click', function() {
+        moves.push(turnRightReverse);
+        if(!isTurning) { nextMove() };
+    });
+    document.getElementById("button_up").addEventListener('click', function() {
+        moves.push(turnUp);
+        if(!isTurning) { nextMove() };
+    });
+    document.getElementById("button_upprime").addEventListener('click', function() {
+        moves.push(turnUpReverse);
+        if(!isTurning) { nextMove() };
+    });
+    document.getElementById("button_front").addEventListener('click', function() {
+        moves.push(turnFront);
+        if(!isTurning) { nextMove() };
+    });
+    document.getElementById("button_frontprime").addEventListener('click', function() {
+        moves.push(turnFrontReverse);
+        if(!isTurning) { nextMove() };
+    });
+    document.getElementById("button_down").addEventListener('click', function() {
+        moves.push(turnDown);
+        if(!isTurning) { nextMove() };
+    });
+    document.getElementById("button_downprime").addEventListener('click', function() {
+        moves.push(turnDownReverse);
+        if(!isTurning) { nextMove() };
+    });
+    document.getElementById("button_back").addEventListener('click', function() {
+        moves.push(turnBack);
+        if(!isTurning) { nextMove() };
+    });
+    document.getElementById("button_backprime").addEventListener('click', function() {
+        moves.push(turnBackReverse);
+        if(!isTurning) { nextMove() };
+    });
+
+    //Rand sequence of \|/ moves
+    var randomSequence = function(numberOfMove) {
+        for (var i = 0; i < numberOfMove; i++) {
+            var rand = Math.floor((Math.random() * 12) + 1);
+
+            switch (rand) {
+                case 1:
+                    moves.push(turnLeft);
+                    break;
+                case 2:
+                    moves.push(turnLeftReverse);
+                    break;
+                case 3:
+                    moves.push(turnRight);
+                    break;
+                case 4:
+                    moves.push(turnRightReverse);
+                    break;
+                case 5:
+                    moves.push(turnFront);
+                    break;
+                case 6:
+                    moves.push(turnFrontReverse);
+                    break;
+                case 7:
+                    moves.push(turnBack);
+                    break;
+                case 8:
+                    moves.push(turnBackReverse);
+                    break;
+                case 9:
+                    moves.push(turnUp);
+                    break;
+                case 10:
+                    moves.push(turnUpReverse);
+                    break;
+                case 11:
+                    moves.push(turnDown);
+                    break;
+                case 12:
+                    moves.push(turnDownReverse);
+                    break;
+                default:
+                    console.log('Fail to random correct number! >_<" -> ' + rand);
+                    break;
+            }
+        }
+    };
+
+    randomSequence(10);
     nextMove();
 
     engine.runRenderLoop(function () {
         scene.render();
     });
 
-    scene.debugLayer.show();
+    //scene.debugLayer.show();
 }

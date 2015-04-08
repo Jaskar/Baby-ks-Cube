@@ -3,6 +3,7 @@
 <head>
 
     <title>Baby'ks Cube</title>
+    <meta charset="UTF-8">
 
     <!-- CSS -->
     <link type="text/css" rel="stylesheet" href="./css/index.css" />
@@ -12,6 +13,22 @@
     <script type="text/javascript" src="./js/index.js"></script>
 </head>
 <body>
+
+    <!-- Buttons to rotate the cube -->
+    <div id="buttonsDiv">
+        <button id="button_up"         class="buttonMovement"> Turn UP 90°     </button>
+        <button id="button_upprime"    class="buttonMovement"> Turn UP -90°    </button>
+        <button id="button_down"       class="buttonMovement"> Turn DOWN 90°   </button>
+        <button id="button_downprime"  class="buttonMovement"> Turn DOWN -90°  </button>
+        <button id="button_front"      class="buttonMovement"> Turn FRONT 90°  </button>
+        <button id="button_frontprime" class="buttonMovement"> Turn FRONT -90° </button>
+        <button id="button_back"       class="buttonMovement"> Turn BACK 90°   </button>
+        <button id="button_backprime"  class="buttonMovement"> Turn BACK -90°  </button>
+        <button id="button_left"       class="buttonMovement"> Turn LEFT 90°   </button>
+        <button id="button_leftprime"  class="buttonMovement"> Turn LEFT -90°  </button>
+        <button id="button_right"      class="buttonMovement"> Turn RIGHT 90°  </button>
+        <button id="button_rightprime" class="buttonMovement"> Turn RIGHT -90° </button>
+    </div>
 
     <canvas id="game_canvas"></canvas>
 
