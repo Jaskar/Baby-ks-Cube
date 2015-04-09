@@ -36,10 +36,11 @@ function initScene() {
 
     var moves = [];
 
-    var isTurning = true;
+    var isTurning = false;
 
     var nextMove = function() {
         if(typeof moves[0] !== 'undefined') {
+            isTurning = true;
             moves[0]();
             moves.shift();
         } else {
@@ -110,55 +111,6 @@ function initScene() {
         }, true);
     };
 
-    document.getElementById("button_left").addEventListener('click', function() {
-        moves.push(turnLeft);
-        if(!isTurning) { nextMove() };
-    });
-    document.getElementById("button_leftprime").addEventListener('click', function() {
-        moves.push(turnLeftReverse);
-        if(!isTurning) { nextMove() };
-    });
-    document.getElementById("button_right").addEventListener('click', function() {
-        moves.push(turnRight);
-        if(!isTurning) { nextMove() };
-    });
-    document.getElementById("button_rightprime").addEventListener('click', function() {
-        moves.push(turnRightReverse);
-        if(!isTurning) { nextMove() };
-    });
-    document.getElementById("button_up").addEventListener('click', function() {
-        moves.push(turnUp);
-        if(!isTurning) { nextMove() };
-    });
-    document.getElementById("button_upprime").addEventListener('click', function() {
-        moves.push(turnUpReverse);
-        if(!isTurning) { nextMove() };
-    });
-    document.getElementById("button_front").addEventListener('click', function() {
-        moves.push(turnFront);
-        if(!isTurning) { nextMove() };
-    });
-    document.getElementById("button_frontprime").addEventListener('click', function() {
-        moves.push(turnFrontReverse);
-        if(!isTurning) { nextMove() };
-    });
-    document.getElementById("button_down").addEventListener('click', function() {
-        moves.push(turnDown);
-        if(!isTurning) { nextMove() };
-    });
-    document.getElementById("button_downprime").addEventListener('click', function() {
-        moves.push(turnDownReverse);
-        if(!isTurning) { nextMove() };
-    });
-    document.getElementById("button_back").addEventListener('click', function() {
-        moves.push(turnBack);
-        if(!isTurning) { nextMove() };
-    });
-    document.getElementById("button_backprime").addEventListener('click', function() {
-        moves.push(turnBackReverse);
-        if(!isTurning) { nextMove() };
-    });
-
     //Rand sequence of \|/ moves
     var randomSequence = function(numberOfMove) {
         for (var i = 0; i < numberOfMove; i++) {
@@ -208,8 +160,58 @@ function initScene() {
         }
     };
 
-    randomSequence(10);
-    nextMove();
+    document.getElementById("button_left").addEventListener('click', function() {
+        moves.push(turnLeft);
+        if(!isTurning) { nextMove() };
+    });
+    document.getElementById("button_leftprime").addEventListener('click', function() {
+        moves.push(turnLeftReverse);
+        if(!isTurning) { nextMove() };
+    });
+    document.getElementById("button_right").addEventListener('click', function() {
+        moves.push(turnRight);
+        if(!isTurning) { nextMove() };
+    });
+    document.getElementById("button_rightprime").addEventListener('click', function() {
+        moves.push(turnRightReverse);
+        if(!isTurning) { nextMove() };
+    });
+    document.getElementById("button_up").addEventListener('click', function() {
+        moves.push(turnUp);
+        if(!isTurning) { nextMove() };
+    });
+    document.getElementById("button_upprime").addEventListener('click', function() {
+        moves.push(turnUpReverse);
+        if(!isTurning) { nextMove() };
+    });
+    document.getElementById("button_front").addEventListener('click', function() {
+        moves.push(turnFront);
+        if(!isTurning) { nextMove() };
+    });
+    document.getElementById("button_frontprime").addEventListener('click', function() {
+        moves.push(turnFrontReverse);
+        if(!isTurning) { nextMove() };
+    });
+    document.getElementById("button_down").addEventListener('click', function() {
+        moves.push(turnDown);
+        if(!isTurning) { nextMove() };
+    });
+    document.getElementById("button_downprime").addEventListener('click', function() {
+        moves.push(turnDownReverse);
+        if(!isTurning) { nextMove() };
+    });
+    document.getElementById("button_back").addEventListener('click', function() {
+        moves.push(turnBack);
+        if(!isTurning) { nextMove() };
+    });
+    document.getElementById("button_backprime").addEventListener('click', function() {
+        moves.push(turnBackReverse);
+        if(!isTurning) { nextMove() };
+    });
+    document.getElementById("button_scramble").addEventListener('click', function() {
+        randomSequence(15);
+        if(!isTurning) { nextMove() };
+    });
 
     engine.runRenderLoop(function () {
         scene.render();
