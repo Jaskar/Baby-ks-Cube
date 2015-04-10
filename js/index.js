@@ -31,191 +31,56 @@ function initScene() {
     var light3 = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0,1,0), scene);
     var light3 = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0,-1,0), scene);
 
-    Cube.initColors(scene);
-    Cube.initFaces(scene);
+    var myCube = Object.create(Cube);
+    myCube.initColors(scene);
+    myCube.initFaces(scene);
 
-    var moves = [];
-
-    var isTurning = false;
-
-    var nextMove = function() {
-        if(typeof moves[0] !== 'undefined') {
-            isTurning = true;
-            moves[0]();
-            moves.shift();
-        } else {
-            isTurning = false;
-        }
-    };
-
-    var sens = false;
-
-    var turnFront = function() {
-        Cube.turnFront(function() {
-            nextMove();
-        });
-    };
-    var turnFrontReverse = function() {
-        Cube.turnFront(function() {
-            nextMove();
-        }, true);
-    };
-    var turnBack = function() {
-        Cube.turnBack(function() {
-            nextMove();
-        });
-    };
-    var turnBackReverse = function() {
-        Cube.turnBack(function() {
-            nextMove();
-        }, true);
-    };
-    var turnRight = function() {
-        Cube.turnRight(function() {
-            nextMove();
-        });
-    };
-    var turnRightReverse = function() {
-        Cube.turnRight(function() {
-            nextMove();
-        }, true);
-    };
-    var turnLeft = function() {
-        Cube.turnLeft(function() {
-            nextMove();
-        });
-    };
-    var turnLeftReverse = function() {
-        Cube.turnLeft(function() {
-            nextMove();
-        }, true);
-    };
-    var turnUp = function() {
-        Cube.turnUp(function() {
-            nextMove();
-        });
-    };
-    var turnUpReverse = function() {
-        Cube.turnUp(function() {
-            nextMove();
-        }, true);
-    };
-    var turnDown = function() {
-        Cube.turnDown(function() {
-            nextMove();
-        });
-    };
-    var turnDownReverse = function() {
-        Cube.turnDown(function() {
-            nextMove();
-        }, true);
-    };
-
-    //Rand sequence of \|/ moves
-    var randomSequence = function(numberOfMove) {
-        for (var i = 0; i < numberOfMove; i++) {
-            var rand = Math.floor((Math.random() * 12) + 1);
-
-            switch (rand) {
-                case 1:
-                    moves.push(turnLeft);
-                    break;
-                case 2:
-                    moves.push(turnLeftReverse);
-                    break;
-                case 3:
-                    moves.push(turnRight);
-                    break;
-                case 4:
-                    moves.push(turnRightReverse);
-                    break;
-                case 5:
-                    moves.push(turnFront);
-                    break;
-                case 6:
-                    moves.push(turnFrontReverse);
-                    break;
-                case 7:
-                    moves.push(turnBack);
-                    break;
-                case 8:
-                    moves.push(turnBackReverse);
-                    break;
-                case 9:
-                    moves.push(turnUp);
-                    break;
-                case 10:
-                    moves.push(turnUpReverse);
-                    break;
-                case 11:
-                    moves.push(turnDown);
-                    break;
-                case 12:
-                    moves.push(turnDownReverse);
-                    break;
-                default:
-                    console.log('Fail to random correct number! >_<" -> ' + rand);
-                    break;
-            }
-        }
-    };
-
-    document.getElementById("button_left").addEventListener('click', function() {
-        moves.push(turnLeft);
-        if(!isTurning) { nextMove() };
-    });
-    document.getElementById("button_leftprime").addEventListener('click', function() {
-        moves.push(turnLeftReverse);
-        if(!isTurning) { nextMove() };
-    });
-    document.getElementById("button_right").addEventListener('click', function() {
-        moves.push(turnRight);
-        if(!isTurning) { nextMove() };
-    });
-    document.getElementById("button_rightprime").addEventListener('click', function() {
-        moves.push(turnRightReverse);
-        if(!isTurning) { nextMove() };
-    });
-    document.getElementById("button_up").addEventListener('click', function() {
-        moves.push(turnUp);
-        if(!isTurning) { nextMove() };
-    });
-    document.getElementById("button_upprime").addEventListener('click', function() {
-        moves.push(turnUpReverse);
-        if(!isTurning) { nextMove() };
-    });
-    document.getElementById("button_front").addEventListener('click', function() {
-        moves.push(turnFront);
-        if(!isTurning) { nextMove() };
-    });
-    document.getElementById("button_frontprime").addEventListener('click', function() {
-        moves.push(turnFrontReverse);
-        if(!isTurning) { nextMove() };
-    });
-    document.getElementById("button_down").addEventListener('click', function() {
-        moves.push(turnDown);
-        if(!isTurning) { nextMove() };
-    });
-    document.getElementById("button_downprime").addEventListener('click', function() {
-        moves.push(turnDownReverse);
-        if(!isTurning) { nextMove() };
-    });
-    document.getElementById("button_back").addEventListener('click', function() {
-        moves.push(turnBack);
-        if(!isTurning) { nextMove() };
-    });
-    document.getElementById("button_backprime").addEventListener('click', function() {
-        moves.push(turnBackReverse);
-        if(!isTurning) { nextMove() };
-    });
-    document.getElementById("button_scramble").addEventListener('click', function() {
-        randomSequence(15);
-        if(!isTurning) { nextMove() };
-    });
+    var myController = Object.create(Controller);
+    myController.init(myCube);
 
     engine.runRenderLoop(function () {
         scene.render();
     });
 
     //scene.debugLayer.show();
+
+    document.getElementById("button_scramble").addEventListener('click', function () {
+        myController.scramble();
+    });
+    document.getElementById("button_left").addEventListener('click', function () {
+        myController.turnLeft();
+    });
+    document.getElementById("button_leftprime").addEventListener('click', function () {
+        myController.turnLeftReverse();
+    });
+    document.getElementById("button_right").addEventListener('click', function () {
+        myController.turnRight();
+    });
+    document.getElementById("button_rightprime").addEventListener('click', function () {
+        myController.turnRightReverse();
+    });
+    document.getElementById("button_up").addEventListener('click', function () {
+        myController.turnUp();
+    });
+    document.getElementById("button_upprime").addEventListener('click', function () {
+        myController.turnUpReverse();
+    });
+    document.getElementById("button_front").addEventListener('click', function () {
+        myController.turnFront();
+    });
+    document.getElementById("button_frontprime").addEventListener('click', function () {
+        myController.turnFrontReverse();
+    });
+    document.getElementById("button_down").addEventListener('click', function () {
+        myController.turnDown();
+    });
+    document.getElementById("button_downprime").addEventListener('click', function () {
+        myController.turnDownReverse();
+    });
+    document.getElementById("button_back").addEventListener('click', function () {
+        myController.turnBack();
+    });
+    document.getElementById("button_backprime").addEventListener('click', function () {
+        myController.turnBackReverse();
+    });
 }
