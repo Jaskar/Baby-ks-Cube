@@ -1,6 +1,6 @@
-Cube = {
+var Cube = {
 
-    /********* FIELDS *********/
+    /** FIELDS **/
 
     // Faces informations
     _frontFace : [['G','G','G'],
@@ -34,7 +34,7 @@ Cube = {
     _speed : 300,
 
 
-    /********* FUNCTIONS *********/
+    /** FUNCTIONS **/
 
     initColors : function(scene) {
         this._scene = scene;
