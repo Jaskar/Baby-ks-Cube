@@ -31,12 +31,12 @@ function initScene() {
     var light3 = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0,1,0), scene);
     var light3 = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0,-1,0), scene);
 
-    var myCube = Object.create(Cube);
-    myCube.initColors(scene);
-    myCube.initFaces(scene);
+    var myCube = new Cube(scene);
+    myCube.initColors();
+    myCube.initColors();
+    myCube.initFaces();
 
-    var myController = Object.create(Controller);
-    myController.init(myCube);
+    var myController = new Controller(myCube);
 
     engine.runRenderLoop(function () {
         scene.render();
@@ -45,7 +45,7 @@ function initScene() {
     //scene.debugLayer.show();
 
     document.getElementById("button_scramble").addEventListener('click', function () {
-        myController.scramble();
+        myController.scramble(10);
     });
     document.getElementById("button_left").addEventListener('click', function () {
         myController.turnLeft();
