@@ -1,28 +1,8 @@
-function Cube(paramScene) {
+function Cube(scene) {
 
-    /** FIELDS **/
+    // FIELDS
 
-    this._scene = paramScene;
-
-    // Faces informations
-    this._frontFace = [['G', 'G', 'G'],
-        ['G', 'G', 'G'],
-        ['G', 'G', 'G']];
-    this._backFace = [['B', 'B', 'B'],
-        ['B', 'B', 'B'],
-        ['B', 'B', 'B']];
-    this._upFace = [['W', 'W', 'W'],
-        ['W', 'W', 'W'],
-        ['W', 'W', 'W']];
-    this._downFace = [['Y', 'Y', 'Y'],
-        ['Y', 'Y', 'Y'],
-        ['Y', 'Y', 'Y']];
-    this._leftFace = [['O', 'O', 'O'],
-        ['O', 'O', 'O'],
-        ['O', 'O', 'O']];
-    this._rightFace = [['R', 'R', 'R'],
-        ['R', 'R', 'R'],
-        ['R', 'R', 'R']];
+    this._scene = scene;
 
     // Planes containers (faces)
     this._frontPlanes = [[null, null, null], [null, null, null], [null, null, null]];
@@ -74,7 +54,7 @@ Cube.prototype.initFaces = function() {
     // Front
     for (x = 0; x < 3; x++) {
         for (y = 0; y < 3; y++) {
-            this._frontPlanes[x][y] = BABYLON.Mesh.CreateBox("front" + x + y, 1, this._scene);
+            this._frontPlanes[x][y] = BABYLON.Mesh.CreateBox("G" + x + y, 1, this._scene);
             this._frontPlanes[x][y].position.x = x - 1;
             this._frontPlanes[x][y].position.y = y - 1;
             this._frontPlanes[x][y].position.z = +1.5;
@@ -89,7 +69,7 @@ Cube.prototype.initFaces = function() {
     // Back
     for (x = 0; x < 3; x++) {
         for (y = 0; y < 3; y++) {
-            this._backPlanes[x][y] = BABYLON.Mesh.CreateBox("back" + x + y, 1, this._scene);
+            this._backPlanes[x][y] = BABYLON.Mesh.CreateBox("B" + x + y, 1, this._scene);
             this._backPlanes[x][y].position.x = x - 1;
             this._backPlanes[x][y].position.y = y - 1;
             this._backPlanes[x][y].position.z = -1.5;
@@ -104,7 +84,7 @@ Cube.prototype.initFaces = function() {
     // Up
     for (x = 0; x < 3; x++) {
         for (y = 0; y < 3; y++) {
-            this._upPlanes[x][y] = BABYLON.Mesh.CreateBox("up" + x + y, 1, this._scene);
+            this._upPlanes[x][y] = BABYLON.Mesh.CreateBox("W" + x + y, 1, this._scene);
             this._upPlanes[x][y].position.x = x - 1;
             this._upPlanes[x][y].position.y = +1.5;
             this._upPlanes[x][y].position.z = y - 1;
@@ -119,7 +99,7 @@ Cube.prototype.initFaces = function() {
     // Down
     for (x = 0; x < 3; x++) {
         for (y = 0; y < 3; y++) {
-            this._downPlanes[x][y] = BABYLON.Mesh.CreateBox("down" + x + y, 1, this._scene);
+            this._downPlanes[x][y] = BABYLON.Mesh.CreateBox("Y" + x + y, 1, this._scene);
             this._downPlanes[x][y].position.x = x - 1;
             this._downPlanes[x][y].position.y = -1.5;
             this._downPlanes[x][y].position.z = y - 1;
@@ -134,7 +114,7 @@ Cube.prototype.initFaces = function() {
     // Left
     for (x = 0; x < 3; x++) {
         for (y = 0; y < 3; y++) {
-            this._leftPlanes[x][y] = BABYLON.Mesh.CreateBox("left" + x + y, 1, this._scene);
+            this._leftPlanes[x][y] = BABYLON.Mesh.CreateBox("O" + x + y, 1, this._scene);
             this._leftPlanes[x][y].position.x = 1.5;
             this._leftPlanes[x][y].position.y = y - 1;
             this._leftPlanes[x][y].position.z = x - 1;
@@ -149,7 +129,7 @@ Cube.prototype.initFaces = function() {
     // Right
     for (x = 0; x < 3; x++) {
         for (y = 0; y < 3; y++) {
-            this._rightPlanes[x][y] = BABYLON.Mesh.CreateBox("right" + x + y, 1, this._scene);
+            this._rightPlanes[x][y] = BABYLON.Mesh.CreateBox("R" + x + y, 1, this._scene);
             this._rightPlanes[x][y].position.x = -1.5;
             this._rightPlanes[x][y].position.y = y - 1;
             this._rightPlanes[x][y].position.z = x - 1;
@@ -160,6 +140,37 @@ Cube.prototype.initFaces = function() {
             this._rightPlanes[x][y].parent = pivotCenter;
         }
     }
+};
+
+
+Cube.prototype.getFacesColors = function() {
+    var colors = [];
+    colors["UP"] = [];
+    colors["DOWN"] = [];
+    colors["LEFT"] = [];
+    colors["RIGHT"] = [];
+    colors["FRONT"] = [];
+    colors["BACK"] = [];
+
+    for(var x = 0; x < 3; x++) {
+        colors["UP"][x] = [];
+        colors["DOWN"][x] = [];
+        colors["LEFT"][x] = [];
+        colors["RIGHT"][x] = [];
+        colors["FRONT"][x] = [];
+        colors["BACK"][x] = [];
+
+        for(var y = 0; y < 3; y++) {
+            colors["UP"][x][y] = this._upPlanes[x][y].name.substr(0,1);
+            colors["DOWN"][x][y] = this._downPlanes[x][y].name.substr(0,1);
+            colors["LEFT"][x][y] = this._leftPlanes[x][y].name.substr(0,1);
+            colors["RIGHT"][x][y] = this._rightPlanes[x][y].name.substr(0,1);
+            colors["FRONT"][x][y] = this._frontPlanes[x][y].name.substr(0,1);
+            colors["BACK"][x][y] = this._backPlanes[x][y].name.substr(0,1);
+        }
+    }
+
+    return colors;
 };
 
 

@@ -1,12 +1,17 @@
-function Controller(paramCube) {
+function Controller(cube) {
 
-    this.cube = paramCube;
+    this.cube = cube;
 
     this.moves = [];
     this.isTurning = false;
 }
 
 // INTERNAL FUNCTIONS **************************************************************************************************
+
+// Get the cube actual position
+Controller.prototype.getFacesColors = function() {
+    return this.cube.getFacesColors();
+};
 
 // Continue the sequence to the next move
 Controller.prototype._nextMove = function () {
