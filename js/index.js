@@ -50,8 +50,7 @@ function initScene() {
         myController.scramble(15);
     });
     document.getElementById("button_solve").addEventListener('click', function () {
-        var solverSequence = mySolver.solve();
-        console.log(solverSequence);
+        mySolver.solve();
     });
     document.getElementById("button_left").addEventListener('click', function () {
         myController.turnLeft();

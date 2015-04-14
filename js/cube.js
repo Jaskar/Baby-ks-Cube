@@ -13,7 +13,7 @@ function Cube(scene) {
     this._rightPlanes = [[null, null, null], [null, null, null], [null, null, null]];
 
     this._stateBeforeMove = [];
-    this._speed = 300;
+    this._speed = 2000;
 
 }
 
@@ -144,29 +144,29 @@ Cube.prototype.initFaces = function() {
 
 
 Cube.prototype.getFacesColors = function() {
-    var colors = [];
-    colors["UP"] = [];
-    colors["DOWN"] = [];
-    colors["LEFT"] = [];
-    colors["RIGHT"] = [];
-    colors["FRONT"] = [];
-    colors["BACK"] = [];
+    var colors = {};
+    colors._upPlanes = [];
+    colors._downPlanes = [];
+    colors._leftPlanes = [];
+    colors._rightPlanes = [];
+    colors._frontPlanes = [];
+    colors._backPlanes = [];
 
     for(var x = 0; x < 3; x++) {
-        colors["UP"][x] = [];
-        colors["DOWN"][x] = [];
-        colors["LEFT"][x] = [];
-        colors["RIGHT"][x] = [];
-        colors["FRONT"][x] = [];
-        colors["BACK"][x] = [];
+        colors._upPlanes[x] = [];
+        colors._downPlanes[x] = [];
+        colors._leftPlanes[x] = [];
+        colors._rightPlanes[x] = [];
+        colors._frontPlanes[x] = [];
+        colors._backPlanes[x] = [];
 
         for(var y = 0; y < 3; y++) {
-            colors["UP"][x][y] = this._upPlanes[x][y].name.substr(0,1);
-            colors["DOWN"][x][y] = this._downPlanes[x][y].name.substr(0,1);
-            colors["LEFT"][x][y] = this._leftPlanes[x][y].name.substr(0,1);
-            colors["RIGHT"][x][y] = this._rightPlanes[x][y].name.substr(0,1);
-            colors["FRONT"][x][y] = this._frontPlanes[x][y].name.substr(0,1);
-            colors["BACK"][x][y] = this._backPlanes[x][y].name.substr(0,1);
+            colors._upPlanes[x][y] = this._upPlanes[x][y].name.substr(0,1);
+            colors._downPlanes[x][y] = this._downPlanes[x][y].name.substr(0,1);
+            colors._leftPlanes[x][y] = this._leftPlanes[x][y].name.substr(0,1);
+            colors._rightPlanes[x][y] = this._rightPlanes[x][y].name.substr(0,1);
+            colors._frontPlanes[x][y] = this._frontPlanes[x][y].name.substr(0,1);
+            colors._backPlanes[x][y] = this._backPlanes[x][y].name.substr(0,1);
         }
     }
 
