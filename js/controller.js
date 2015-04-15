@@ -91,50 +91,67 @@ Controller.prototype._turnDownReverse = function (that) {
 // EXTERNAL FUNCTIONS TO CALL MOVEMENTS ********************************************************************************
 
 Controller.prototype.scramble = function(number) {
+    var scrambleSequence = [];
+
     for (var i = 0; i < number; i++) {
         var rand = Math.floor((Math.random() * 12) + 1);
         switch (rand) {
             case 1:
                 this.turnLeft();
+                scrambleSequence.push("L");
                 break;
             case 2:
                 this.turnLeftReverse();
+                scrambleSequence.push("L'");
                 break;
             case 3:
                 this.turnRight();
+                scrambleSequence.push("R");
                 break;
             case 4:
                 this.turnRightReverse();
+                scrambleSequence.push("R'");
                 break;
             case 5:
                 this.turnFront();
+                scrambleSequence.push("F");
                 break;
             case 6:
                 this.turnFrontReverse();
+                scrambleSequence.push("F'");
+
                 break;
             case 7:
                 this.turnBack();
+                scrambleSequence.push("B");
                 break;
             case 8:
                 this.turnBackReverse();
+                scrambleSequence.push("B'");
                 break;
             case 9:
                 this.turnUp();
+                scrambleSequence.push("U");
                 break;
             case 10:
                 this.turnUpReverse();
+                scrambleSequence.push("U'");
                 break;
             case 11:
                 this.turnDown();
+                scrambleSequence.push("D");
                 break;
             case 12:
                 this.turnDownReverse();
+                scrambleSequence.push("D'");
                 break;
             default:
                 console.log('Fail to random correct number! >_<" -> ' + rand);
                 break;
         }
     }
+
+    console.log(scrambleSequence);
 
     if (! this.isTurning) {
         this._nextMove();

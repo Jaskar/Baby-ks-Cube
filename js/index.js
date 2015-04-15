@@ -44,6 +44,10 @@ function initScene() {
         scene.render();
     });
 
+    window.addEventListener("resize", function () {
+        engine.resize();
+    });
+
     //scene.debugLayer.show();
 
     document.getElementById("button_scramble").addEventListener('click', function () {
