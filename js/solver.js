@@ -13,13 +13,13 @@ function Solver(controller) {
         this.step_corner_A,
         this.step_corner_B,
         this.step_corner_C,
-        this.step_corner_D
-        //this.step_edge_4,
-        //this.step_edge_5,
-        //this.step_edge_6,
-        //this.step_edge_7,
-        //this.step_edge_8,
-        //this.step_edge_9
+        this.step_corner_D,
+        this.step_edge_4,
+        this.step_edge_5,
+        this.step_edge_6,
+        this.step_edge_7,
+        this.step_edge_8,
+        this.step_edge_9
     ];
 }
 
@@ -38,6 +38,88 @@ Solver.prototype.solve = function() {
 };
 
 Solver.prototype.doMoves = function(that) {
+
+    // Minimize the sequence by deleting contrary moves
+    //for(var i = this.resolveSequence.length-1; i > 0; i--) {
+    //    switch(this.resolveSequence[i]) {
+    //        case "U":
+    //            if(this.resolveSequence[i-1] == "U'") {
+    //                this.resolveSequence.splice(i-1, 2);
+    //                i = this.resolveSequence.length;
+    //            }
+    //            break;
+    //        case "U'":
+    //            if(this.resolveSequence[i-1] == "U") {
+    //                this.resolveSequence.splice(i-1, 2);
+    //                i = this.resolveSequence.length;
+    //            }
+    //            break;
+    //        case "D":
+    //            if(this.resolveSequence[i-1] == "D'") {
+    //                this.resolveSequence.splice(i-1, 2);
+    //                i = this.resolveSequence.length;
+    //            }
+    //            break;
+    //        case "D'":
+    //            if(this.resolveSequence[i-1] == "D") {
+    //                this.resolveSequence.splice(i-1, 2);
+    //                i = this.resolveSequence.length;
+    //            }
+    //            break;
+    //        case "L":
+    //            if(this.resolveSequence[i-1] == "L'") {
+    //                this.resolveSequence.splice(i-1, 2);
+    //                i = this.resolveSequence.length;
+    //            }
+    //            break;
+    //        case "L'":
+    //            if(this.resolveSequence[i-1] == "L") {
+    //                this.resolveSequence.splice(i-1, 2);
+    //                i = this.resolveSequence.length;
+    //            }
+    //            break;
+    //        case "R":
+    //            if(this.resolveSequence[i-1] == "F'") {
+    //                this.resolveSequence.splice(i-1, 2);
+    //                i = this.resolveSequence.length;
+    //            }
+    //            break;
+    //        case "R'":
+    //            if(this.resolveSequence[i-1] == "R") {
+    //                this.resolveSequence.splice(i-1, 2);
+    //                i = this.resolveSequence.length;
+    //            }
+    //            break;
+    //        case "F":
+    //            if(this.resolveSequence[i-1] == "F'") {
+    //                this.resolveSequence.splice(i-1, 2);
+    //                i = this.resolveSequence.length;
+    //            }
+    //            break;
+    //        case "F'":
+    //            if(this.resolveSequence[i-1] == "F") {
+    //                this.resolveSequence.splice(i-1, 2);
+    //                i = this.resolveSequence.length;
+    //            }
+    //            break;
+    //        case "B":
+    //            if(this.resolveSequence[i-1] == "B'") {
+    //                this.resolveSequence.splice(i-1, 2);
+    //                i = this.resolveSequence.length;
+    //            }
+    //            break;
+    //        case "B'":
+    //            if(this.resolveSequence[i-1] == "B") {
+    //                this.resolveSequence.splice(i-1, 2);
+    //                i = this.resolveSequence.length;
+    //            }
+    //            break;
+    //        default:
+    //            console.log("Problem during minimize resolve sequence");
+    //            break;
+    //    }
+    //}
+
     this.resolveSequence.forEach(function(move) {
         switch(move) {
             case "U":

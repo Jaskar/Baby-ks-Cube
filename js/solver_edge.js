@@ -331,11 +331,220 @@ Solver.prototype.step_edge_7 = function(that) {
 };
 // Solve the White up edge
 Solver.prototype.step_edge_8 = function(that) {
+    var move = function() {
+        that.turnLeft(that, true);
+        that.turnFront(that, true);
+        that.turnUp(that, true);
+        that.turnFront(that, false);
+        that.turnUp(that, false);
+        that.turnLeft(that, false);
+    };
 
+    // Cross ok
+    if(that.faceColors._upPlanes[0][1] == "W"
+        && that.faceColors._upPlanes[1][0] == "W"
+        && that.faceColors._upPlanes[1][2] == "W"
+        && that.faceColors._upPlanes[2][1] == "W") {
+        // Already in place
+        console.log("Top cross ok");
+    }
+
+    // Line 9 / 11
+    else if(that.faceColors._upPlanes[0][1] == "W"
+        && that.faceColors._upPlanes[2][1] == "W") {
+        console.log("Top cross line 9 / 11");
+        that.turnUp(that, true);
+        move();
+    }
+    // Line 8 / 10
+    else if(that.faceColors._upPlanes[1][0] == "W"
+        && that.faceColors._upPlanes[1][2] == "W") {
+        console.log("Top cross line 8 / 10");
+        move();
+    }
+
+    // Corner 9 / 10
+    else if(that.faceColors._upPlanes[0][1] == "W"
+        && that.faceColors._upPlanes[1][0] == "W") {
+        console.log("Top cross corner 9 / 10");
+        move();
+        move();
+    }
+    // Corner 10 / 11
+    else if(that.faceColors._upPlanes[1][0] == "W"
+        && that.faceColors._upPlanes[2][1] == "W") {
+        console.log("Top cross corner 10 / 11");
+        that.turnUp(that, true);
+        move();
+        move();
+    }
+    // Corner 11 / 8
+    else if(that.faceColors._upPlanes[2][1] == "W"
+        && that.faceColors._upPlanes[1][2] == "W") {
+        console.log("Top cross 11 / 8");
+        that.turnUp(that, true);
+        that.turnUp(that, true);
+        move();
+        move();
+    }
+    // Corner 8 / 9
+    else if(that.faceColors._upPlanes[1][2] == "W"
+        && that.faceColors._upPlanes[0][1] == "W") {
+        console.log("Top cross 8 / 9");
+        that.turnUp(that, false);
+        move();
+        move();
+    }
+
+    // None
+    else {
+        console.log("Top cross none");
+        move();
+        that.turnUp(that, true);
+        that.turnUp(that, true);
+        move();
+        move();
+    }
 };
 // Solve the Up edges
 Solver.prototype.step_edge_9 = function(that) {
+    var move = function() {
+        that.turnLeft(that, false);
+        that.turnUp(that, true);
+        that.turnUp(that, true);
+        that.turnLeft(that, true);
+        that.turnUp(that, true);
+        that.turnLeft(that, false);
+        that.turnUp(that, true);
+        that.turnLeft(that, true);
+    };
+    var colors = [];
 
+    colors = ["G", "O", "B", "R"]
+    for(var i = 0; i < 4; i++) {
+        if(that.faceColors._frontPlanes[1][2] == colors[0]
+            && that.faceColors._leftPlanes[1][2] == colors[1]
+            && that.faceColors._backPlanes[1][2] == colors[2]
+            && that.faceColors._rightPlanes[1][2] == colors[3])
+        {
+            console.log("Correctly placed.");
+
+            for(var x = 0; x < i; x++) {
+                console.log("Turn up a bit");
+                that.turnUp(that, true);
+            }
+
+            return;
+        }
+
+        var tempColor = colors[0];
+        colors[0] = colors[1];
+        colors[1] = colors[2];
+        colors[2] = colors[3];
+        colors[3] = tempColor;
+    }
+
+    // Else, place the green correctly
+    if(that.faceColors._frontPlanes[1][2] == "G") {
+        console.log("Cross placement ok");
+    }
+    else if(that.faceColors._rightPlanes[1][2] == "G") {
+        console.log("Cross placement 1");
+        that.turnUp(that, true);
+    }
+    else if(that.faceColors._backPlanes[1][2] == "G") {
+        console.log("Cross placement 2");
+        that.turnUp(that, true);
+        that.turnUp(that, true);
+    }
+    else if(that.faceColors._leftPlanes[1][2] == "G") {
+        console.log("Cross placement 3");
+        that.turnUp(that, false);
+    }
+
+    // If green and blue correctly placed, permute orange / red
+    if(that.faceColors._backPlanes[1][2] == "B") {
+        console.log("Permute orange / red");
+
+        that.turnRight(that, true);
+        that.turnUp(that, true);
+        that.turnRight(that, false);
+        that.turnUp(that, false);
+        that.turnRight(that, false);
+        that.turnFront(that, true);
+        that.turnRight(that, true);
+        that.turnRight(that, true);
+        that.turnUp(that, false);
+        that.turnRight(that, false);
+        that.turnUp(that, false);
+        that.turnRight(that, true);
+        that.turnUp(that, true);
+        that.turnRight(that, false);
+        that.turnFront(that, false);
+
+        return;
+    }
+
+    // If orange is correcly placed, permute blue / red
+    if(that.faceColors._leftPlanes[1][2] == "O") {
+        console.log("Permutre blue / red");
+
+        that.turnRight(that, true);
+        that.turnUp(that, true);
+        that.turnUp(that, true);
+        that.turnRight(that, false);
+        that.turnUp(that, true);
+        that.turnUp(that, true);
+        that.turnRight(that, true);
+        that.turnBack(that, false);
+        that.turnRight(that, false);
+        that.turnUp(that, false);
+        that.turnRight(that, true);
+        that.turnUp(that, true);
+        that.turnRight(that, true);
+        that.turnBack(that, true);
+        that.turnRight(that, false);
+        that.turnRight(that, false);
+        that.turnUp(that, true);
+
+        return;
+    }
+
+    // If red is correctly placed, permute blue / orange
+    if(that.faceColors._rightPlanes[1][2] == "R") {
+        console.log("Permutre blue / orange");
+
+        that.turnFront(that, true);
+        that.turnRight(that, true);
+        that.turnUp(that, false);
+        that.turnRight(that, false);
+        that.turnUp(that, false);
+        that.turnRight(that, true);
+        that.turnUp(that, true);
+        that.turnRight(that, false);
+        that.turnFront(that, false);
+        that.turnRight(that, true);
+        that.turnUp(that, true);
+        that.turnRight(that, false);
+        that.turnUp(that, false);
+        that.turnRight(that, false);
+        that.turnFront(that, true);
+        that.turnRight(that, true);
+        that.turnFront(that, false);
+
+        return;
+    }
+
+    // Else, permute 3 until it's OK
+    for(var i = 0; i < 2; i++) {
+        if(that.faceColors._leftPlanes[1][2] == "O"
+            && that.faceColors._rightPlanes[1][2] == "R") {
+            return;
+        } else {
+            console.log("Turn all");
+            move();
+        }
+    }
 };
 
 
@@ -556,10 +765,22 @@ Solver.prototype.edge_4_to_3 = function(that, sens) {
 Solver.prototype.edge_4_to_4 = function(that, sens) {
     console.log("Edge 4 to 4 " + sens);
     if(sens) {
-
+        // Already in place
     }
     else {
-
+        that.turnRight(that, true);
+        that.turnUp(that, true);
+        that.turnUp(that, true);
+        that.turnRight(that, false);
+        that.turnUp(that, true);
+        that.turnRight(that, true);
+        that.turnUp(that, false);
+        that.turnUp(that, false);
+        that.turnRight(that, false);
+        that.turnUp(that, true);
+        that.turnFront(that, false);
+        that.turnUp(that, false);
+        that.turnFront(that, true);
     }
 };
 
@@ -625,18 +846,39 @@ Solver.prototype.edge_5_to_3 = function(that, sens) {
 Solver.prototype.edge_5_to_4 = function(that, sens) {
     console.log("Edge 5 to 4 " + sens);
     if(sens) {
-
+        that.turnBack(that, true);
+        that.turnUp(that, true);
+        that.turnBack(that, false);
+        that.turnUp(that, false);
+        that.turnRight(that, false);
+        that.turnUp(that, false);
+        that.turnRight(that, true);
+        that.turnUp(that, true);
+        that.edge_10_to_4(that, true);
     }
     else {
-
+        that.edge_5_to_5(that, false);
+        that.edge_5_to_4(that, true);
     }
 };
 Solver.prototype.edge_5_to_5 = function(that, sens) {
     if(sens) {
-
+        // Already in place
     }
     else {
-
+        that.turnBack(that, true);
+        that.turnUp(that, true);
+        that.turnUp(that, true);
+        that.turnBack(that, false);
+        that.turnUp(that, true);
+        that.turnBack(that, true);
+        that.turnUp(that, true);
+        that.turnUp(that, true);
+        that.turnBack(that, false);
+        that.turnUp(that, true);
+        that.turnRight(that, false);
+        that.turnUp(that, false);
+        that.turnRight(that, true);
     }
 };
 
@@ -697,27 +939,58 @@ Solver.prototype.edge_6_to_3 = function(that, sens) {
     }
 };
 Solver.prototype.edge_6_to_4 = function(that, sens) {
+    console.log("Edge 6 to 4 " + sens);
     if(sens) {
-
+        that.turnLeft(that, true);
+        that.turnUp(that, true);
+        that.turnLeft(that, false);
+        that.turnUp(that, false);
+        that.turnBack(that, false);
+        that.turnUp(that, false);
+        that.turnBack(that, true);
+        that.edge_8_to_4(that, true);
     }
     else {
-
+        that.edge_6_to_6(that, false);
+        that.edge_6_to_4(that, true);
     }
 };
 Solver.prototype.edge_6_to_5 = function(that, sens) {
+    console.log("Edge 6 to 5 " + sens);
     if(sens) {
-
+        that.turnLeft(that, true);
+        that.turnUp(that, true);
+        that.turnLeft(that, false);
+        that.turnUp(that, false);
+        that.turnBack(that, false);
+        that.turnUp(that, false);
+        that.turnBack(that, true);
+        that.edge_8_to_5(that, true);
     }
     else {
-
+        that.edge_6_to_6(that, false);
+        that.edge_6_to_5(that, true);
     }
 };
 Solver.prototype.edge_6_to_6 = function(that, sens) {
+    console.log("Edge 6 to 6 " + sens);
     if(sens) {
-
+        // Already in place
     }
     else {
-
+        that.turnLeft(that, true);
+        that.turnUp(that, true);
+        that.turnUp(that, true);
+        that.turnLeft(that, false);
+        that.turnUp(that, true);
+        that.turnLeft(that, true);
+        that.turnUp(that, true);
+        that.turnUp(that, true);
+        that.turnLeft(that, false);
+        that.turnUp(that, true);
+        that.turnBack(that, false);
+        that.turnUp(that, false);
+        that.turnBack(that, true);
     }
 };
 
@@ -779,35 +1052,75 @@ Solver.prototype.edge_7_to_3 = function(that, sens) {
     }
 };
 Solver.prototype.edge_7_to_4 = function(that, sens) {
+    console.log("Edge 7 to 4 " + sens);
     if(sens) {
-
+        that.turnFront(that, true);
+        that.turnUp(that, true);
+        that.turnFront(that, false);
+        that.turnUp(that, false);
+        that.turnLeft(that, false);
+        that.turnUp(that, false);
+        that.turnLeft(that, true);
+        that.edge_9_to_4(that, true);
     }
     else {
-
+        that.edge_7_to_7(that, false);
+        that.edge_7_to_4(that, true);
     }
 };
 Solver.prototype.edge_7_to_5 = function(that, sens) {
+    console.log("Edge 7 to 5 " + sens);
     if(sens) {
-
+        that.turnFront(that, true);
+        that.turnUp(that, true);
+        that.turnFront(that, false);
+        that.turnUp(that, false);
+        that.turnLeft(that, false);
+        that.turnUp(that, false);
+        that.turnLeft(that, true);
+        that.edge_9_to_5(that, true);
     }
     else {
-
+        that.edge_7_to_7(that, false);
+        that.edge_7_to_5(that, true);
     }
 };
 Solver.prototype.edge_7_to_6 = function(that, sens) {
+    console.log("Edge 7 to 6 " + sens);
     if(sens) {
-
+        that.turnFront(that, true);
+        that.turnUp(that, true);
+        that.turnFront(that, false);
+        that.turnUp(that, false);
+        that.turnLeft(that, false);
+        that.turnUp(that, false);
+        that.turnLeft(that, true);
+        that.edge_9_to_6(that, true);
     }
     else {
-
+        that.edge_7_to_7(that, false);
+        that.edge_7_to_6(that, true);
     }
 };
 Solver.prototype.edge_7_to_7 = function(that, sens) {
+    console.log("Edge 7 to 7 " + sens);
     if(sens) {
-
+        // Already in place
     }
     else {
-
+        that.turnFront(that, true);
+        that.turnUp(that, true);
+        that.turnUp(that, true);
+        that.turnFront(that, false);
+        that.turnUp(that, true);
+        that.turnFront(that, true);
+        that.turnUp(that, true);
+        that.turnUp(that, true);
+        that.turnFront(that, false);
+        that.turnUp(that, true);
+        that.turnLeft(that, false);
+        that.turnUp(that, false);
+        that.turnLeft(that, true);
     }
 };
 
@@ -866,35 +1179,66 @@ Solver.prototype.edge_8_to_3 = function(that, sens) {
     }
 };
 Solver.prototype.edge_8_to_4 = function(that, sens) {
+    console.log("Edge 8 to 4 " + sens);
     if(sens) {
-
+        that.turnUp(that, true);
+        that.turnUp(that, true);
+        that.edge_10_to_4(that, true);
     }
     else {
-
+        that.turnUp(that, false);
+        that.turnLeft(that, true);
+        that.turnFront(that, true);
+        that.turnUp(that, true);
+        that.turnFront(that, false);
+        that.turnUp(that, false);
+        that.turnLeft(that, false);
+        that.turnUp(that, true);
+        that.edge_10_to_4(that, true);
     }
 };
 Solver.prototype.edge_8_to_5 = function(that, sens) {
+    console.log("Edge 8 to 5 " + sens);
     if(sens) {
-
+        that.turnUp(that, true);
+        that.edge_11_to_5(that, true);
     }
     else {
-
+        that.turnBack(that, true);
+        that.turnUp(that, false);
+        that.turnBack(that, false);
+        that.turnUp(that, false);
+        that.turnRight(that, false);
+        that.turnUp(that, true);
+        that.turnRight(that, true);
     }
 };
 Solver.prototype.edge_8_to_6 = function(that, sens) {
+    console.log("Edge 8 to 6 " + sens);
     if(sens) {
-
+        that.turnBack(that, false);
+        that.turnUp(that, true);
+        that.turnBack(that, true);
+        that.turnUp(that, true);
+        that.turnLeft(that, true);
+        that.turnUp(that, false);
+        that.turnLeft(that, false);
     }
     else {
-
+        that.turnUp(that, false);
+        that.edge_9_to_6(that, false);
     }
 };
 Solver.prototype.edge_8_to_7 = function(that, sens) {
+    console.log("Edge 8 to 7 " + sens);
     if(sens) {
-
+        that.turnUp(that, false);
+        that.edge_9_to_7(that, true);
     }
     else {
-
+        that.turnUp(that, true);
+        that.turnUp(that, true);
+        that.edge_10_to_7(that, false);
     }
 };
 
@@ -955,35 +1299,59 @@ Solver.prototype.edge_9_to_3 = function(that, sens) {
     }
 };
 Solver.prototype.edge_9_to_4 = function(that, sens) {
+    console.log("Edge 9 to 4 " + sens);
     if(sens) {
-
+        that.turnUp(that, false);
+        that.edge_10_to_4(that, true);
     }
     else {
-
+        that.turnUp(that, true);
+        that.turnUp(that, true);
+        that.edge_11_to_4(that, false);
     }
 };
 Solver.prototype.edge_9_to_5 = function(that, sens) {
+    console.log("Edge 9 to 5 " + sens);
     if(sens) {
-
+        that.turnUp(that, true);
+        that.turnUp(that, true);
+        that.edge_11_to_5(that, true);
     }
     else {
-
+        that.turnUp(that, true);
+        that.edge_8_to_5(that, false);
     }
 };
 Solver.prototype.edge_9_to_6 = function(that, sens) {
+    console.log("Edge 9 to 6 " + sens);
     if(sens) {
-
+        that.turnUp(that, true);
+        that.edge_8_to_6(that, true);
     }
     else {
-
+        that.turnLeft(that, true);
+        that.turnUp(that, false);
+        that.turnLeft(that, false);
+        that.turnUp(that, false);
+        that.turnBack(that, false);
+        that.turnUp(that, true);
+        that.turnBack(that, true);
     }
 };
 Solver.prototype.edge_9_to_7 = function(that, sens) {
+    console.log("Edge 9 to 7 " + sens);
     if(sens) {
-
+        that.turnLeft(that, false);
+        that.turnUp(that, true);
+        that.turnLeft(that, true);
+        that.turnUp(that, true);
+        that.turnFront(that, true);
+        that.turnUp(that, false);
+        that.turnFront(that, false);
     }
     else {
-
+        that.turnUp(that, false);
+        that.edge_10_to_7(that, false);
     }
 };
 
@@ -1048,35 +1416,65 @@ Solver.prototype.edge_10_to_3 = function(that, sens) {
     }
 };
 Solver.prototype.edge_10_to_4 = function(that, sens) {
+    console.log("Edge 10 to 4 " + sens);
     if(sens) {
-
+        that.turnFront(that, false);
+        that.turnUp(that, true);
+        that.turnFront(that, true);
+        that.turnUp(that, true);
+        that.turnRight(that, true);
+        that.turnUp(that, false);
+        that.turnRight(that, false);
     }
     else {
-
+        that.turnUp(that, false);
+        that.turnRight(that, true);
+        that.turnUp(that, false);
+        that.turnRight(that, false);
+        that.turnUp(that, false);
+        that.turnFront(that, false);
+        that.turnUp(that, true);
+        that.turnFront(that, true);
     }
 };
 Solver.prototype.edge_10_to_5 = function(that, sens) {
+    console.log("Edge 10 to 5 " + sens);
     if(sens) {
-
+        that.turnUp(that, false);
+        that.edge_11_to_5(that, true);
     }
     else {
-
+        that.turnUp(that, true);
+        that.turnUp(that, true);
+        that.edge_8_to_5(that, false);
     }
 };
 Solver.prototype.edge_10_to_6 = function(that, sens) {
+    console.log("Edge 10 to 6 " + sens);
     if(sens) {
-
+        that.turnUp(that, true);
+        that.turnUp(that, true);
+        that.edge_8_to_6(that, true);
     }
     else {
-
+        that.turnUp(that, true);
+        that.edge_9_to_6(that, false);
     }
 };
 Solver.prototype.edge_10_to_7 = function(that, sens) {
+    console.log("Edge 10 to 7 " + sens);
     if(sens) {
-
+        that.turnUp(that, true);
+        that.edge_9_to_7(that, true);
     }
     else {
-
+        that.turnFront(that, true);
+        that.turnUp(that, false);
+        that.turnFront(that, false);
+        that.turnUp(that, false);
+        that.turnLeft(that, false);
+        that.turnUp(that, true);
+        that.turnLeft(that, true);
     }
 };
 
@@ -1139,58 +1537,58 @@ Solver.prototype.edge_11_to_3 = function(that, sens) {
     }
 };
 Solver.prototype.edge_11_to_4 = function(that, sens) {
+    console.log("Edge 11 to 4 " + sens);
     if(sens) {
-
+        that.turnUp(that, true);
+        that.edge_10_to_4(that, true);
     }
     else {
-
+        that.turnRight(that, true);
+        that.turnUp(that, false);
+        that.turnRight(that, false);
+        that.turnUp(that, false);
+        that.turnFront(that, false);
+        that.turnUp(that, true);
+        that.turnFront(that, true);
     }
 };
 Solver.prototype.edge_11_to_5 = function(that, sens) {
+    console.log("Edge 11 to 5 " + sens);
     if(sens) {
-
+        that.turnRight(that, false);
+        that.turnUp(that, true);
+        that.turnRight(that, true);
+        that.turnUp(that, true);
+        that.turnBack(that, true);
+        that.turnUp(that, false);
+        that.turnBack(that, false);
     }
     else {
-
+        that.turnUp(that, false);
+        that.edge_8_to_5(that, false);
     }
 };
 Solver.prototype.edge_11_to_6 = function(that, sens) {
+    console.log("Edge 11 to 6 " + sens);
     if(sens) {
-
+        that.turnUp(that, false);
+        that.edge_8_to_6(that, true);
     }
     else {
-
+        that.turnUp(that, true);
+        that.turnUp(that, true);
+        that.edge_9_to_6(that, false);
     }
 };
 Solver.prototype.edge_11_to_7 = function(that, sens) {
+    console.log("Edge 11 to 7 " + sens);
     if(sens) {
-
+        that.turnUp(that, true);
+        that.turnUp(that, true);
+        that.edge_9_to_7(that, true);
     }
     else {
-
-    }
-};
-
-// White Up
-Solver.prototype.edge_white_up_corner = function(that, sens) {
-    if(sens == 1) {
-
-    }
-    else if(sens == 2) {
-
-    }
-    else if(sens == 3) {
-
-    }
-    else if(sens == 4) {
-
-    }
-};
-Solver.prototype.edge_white_up_long = function(that, sens) {
-    if(sens == 1) {
-
-    }
-    else if(sens == 2) {
-
+        that.turnUp(that, true);
+        that.edge_10_to_7(that, false);
     }
 };

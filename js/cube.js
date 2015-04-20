@@ -13,7 +13,7 @@ function Cube(scene) {
     this._rightPlanes = [[null, null, null], [null, null, null], [null, null, null]];
 
     this._stateBeforeMove = [];
-    this._speed = 500;
+    this._speed = 5000;
 
 }
 
