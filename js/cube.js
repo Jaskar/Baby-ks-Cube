@@ -1,28 +1,8 @@
-function Cube(paramScene) {
+function Cube(scene) {
 
-    /** FIELDS **/
+    // FIELDS
 
-    this._scene = paramScene;
-
-    // Faces informations
-    this._frontFace = [['G', 'G', 'G'],
-        ['G', 'G', 'G'],
-        ['G', 'G', 'G']];
-    this._backFace = [['B', 'B', 'B'],
-        ['B', 'B', 'B'],
-        ['B', 'B', 'B']];
-    this._upFace = [['W', 'W', 'W'],
-        ['W', 'W', 'W'],
-        ['W', 'W', 'W']];
-    this._downFace = [['Y', 'Y', 'Y'],
-        ['Y', 'Y', 'Y'],
-        ['Y', 'Y', 'Y']];
-    this._leftFace = [['O', 'O', 'O'],
-        ['O', 'O', 'O'],
-        ['O', 'O', 'O']];
-    this._rightFace = [['R', 'R', 'R'],
-        ['R', 'R', 'R'],
-        ['R', 'R', 'R']];
+    this._scene = scene;
 
     // Planes containers (faces)
     this._frontPlanes = [[null, null, null], [null, null, null], [null, null, null]];
@@ -33,7 +13,7 @@ function Cube(paramScene) {
     this._rightPlanes = [[null, null, null], [null, null, null], [null, null, null]];
 
     this._stateBeforeMove = [];
-    this._speed = 300;
+    this._speed = 500;
 
 }
 
@@ -43,26 +23,32 @@ Cube.prototype.initColors = function() {
     this._matGreen = new BABYLON.StandardMaterial("green", this._scene);
     this._matGreen.diffuseColor = new BABYLON.Color3(0, 1, 0);
     this._matGreen.specularColor = new BABYLON.Color3.Black();
+    this._matGreen.diffuseTexture =  new BABYLON.Texture("./assets/green.png", this._scene);
 
     this._matBlue = new BABYLON.StandardMaterial("green", this._scene);
     this._matBlue.diffuseColor = new BABYLON.Color3(0, 0, 1);
     this._matBlue.specularColor = new BABYLON.Color3.Black();
+    this._matBlue.diffuseTexture =  new BABYLON.Texture("./assets/blue.png", this._scene);
 
     this._matWhite = new BABYLON.StandardMaterial("green", this._scene);
     this._matWhite.diffuseColor = new BABYLON.Color3(1, 1, 1);
     this._matWhite.specularColor = new BABYLON.Color3.Black();
+    this._matWhite.diffuseTexture =  new BABYLON.Texture("./assets/white.png", this._scene);
 
     this._matYellow = new BABYLON.StandardMaterial("green", this._scene);
     this._matYellow.diffuseColor = new BABYLON.Color3(1, 1, 0);
     this._matYellow.specularColor = new BABYLON.Color3.Black();
+    this._matYellow.diffuseTexture =  new BABYLON.Texture("./assets/yellow.png", this._scene);
 
     this._matOrange = new BABYLON.StandardMaterial("green", this._scene);
     this._matOrange.diffuseColor = new BABYLON.Color3(0.6, 0.3, 0);
     this._matOrange.specularColor = new BABYLON.Color3.Black();
+    this._matOrange.diffuseTexture =  new BABYLON.Texture("./assets/orange.png", this._scene);
 
     this._matRed = new BABYLON.StandardMaterial("green", this._scene);
     this._matRed.diffuseColor = new BABYLON.Color3(1, 0, 0);
     this._matRed.specularColor = new BABYLON.Color3.Black();
+    this._matRed.diffuseTexture =  new BABYLON.Texture("./assets/red.png", this._scene);
 };
 
 Cube.prototype.initFaces = function() {
@@ -74,12 +60,12 @@ Cube.prototype.initFaces = function() {
     // Front
     for (x = 0; x < 3; x++) {
         for (y = 0; y < 3; y++) {
-            this._frontPlanes[x][y] = BABYLON.Mesh.CreateBox("front" + x + y, 1, this._scene);
+            this._frontPlanes[x][y] = BABYLON.Mesh.CreateBox("G" + x + y, 1, this._scene);
             this._frontPlanes[x][y].position.x = x - 1;
             this._frontPlanes[x][y].position.y = y - 1;
             this._frontPlanes[x][y].position.z = +1.5;
-            this._frontPlanes[x][y].scaling.x = 0.95;
-            this._frontPlanes[x][y].scaling.y = 0.95;
+            this._frontPlanes[x][y].scaling.x = 1;
+            this._frontPlanes[x][y].scaling.y = 1;
             this._frontPlanes[x][y].scaling.z = 0.01;
             this._frontPlanes[x][y].material = this._matGreen;
             this._frontPlanes[x][y].parent = pivotCenter;
@@ -89,12 +75,12 @@ Cube.prototype.initFaces = function() {
     // Back
     for (x = 0; x < 3; x++) {
         for (y = 0; y < 3; y++) {
-            this._backPlanes[x][y] = BABYLON.Mesh.CreateBox("back" + x + y, 1, this._scene);
+            this._backPlanes[x][y] = BABYLON.Mesh.CreateBox("B" + x + y, 1, this._scene);
             this._backPlanes[x][y].position.x = x - 1;
             this._backPlanes[x][y].position.y = y - 1;
             this._backPlanes[x][y].position.z = -1.5;
-            this._backPlanes[x][y].scaling.x = 0.95;
-            this._backPlanes[x][y].scaling.y = 0.95;
+            this._backPlanes[x][y].scaling.x = 1;
+            this._backPlanes[x][y].scaling.y = 1;
             this._backPlanes[x][y].scaling.z = 0.01;
             this._backPlanes[x][y].material = this._matBlue;
             this._backPlanes[x][y].parent = pivotCenter;
@@ -104,13 +90,13 @@ Cube.prototype.initFaces = function() {
     // Up
     for (x = 0; x < 3; x++) {
         for (y = 0; y < 3; y++) {
-            this._upPlanes[x][y] = BABYLON.Mesh.CreateBox("up" + x + y, 1, this._scene);
+            this._upPlanes[x][y] = BABYLON.Mesh.CreateBox("W" + x + y, 1, this._scene);
             this._upPlanes[x][y].position.x = x - 1;
             this._upPlanes[x][y].position.y = +1.5;
             this._upPlanes[x][y].position.z = y - 1;
-            this._upPlanes[x][y].scaling.x = 0.95;
+            this._upPlanes[x][y].scaling.x = 1;
             this._upPlanes[x][y].scaling.y = 0.01;
-            this._upPlanes[x][y].scaling.z = 0.95;
+            this._upPlanes[x][y].scaling.z = 1;
             this._upPlanes[x][y].material = this._matWhite;
             this._upPlanes[x][y].parent = pivotCenter;
         }
@@ -119,13 +105,13 @@ Cube.prototype.initFaces = function() {
     // Down
     for (x = 0; x < 3; x++) {
         for (y = 0; y < 3; y++) {
-            this._downPlanes[x][y] = BABYLON.Mesh.CreateBox("down" + x + y, 1, this._scene);
+            this._downPlanes[x][y] = BABYLON.Mesh.CreateBox("Y" + x + y, 1, this._scene);
             this._downPlanes[x][y].position.x = x - 1;
             this._downPlanes[x][y].position.y = -1.5;
             this._downPlanes[x][y].position.z = y - 1;
-            this._downPlanes[x][y].scaling.x = 0.95;
+            this._downPlanes[x][y].scaling.x = 1;
             this._downPlanes[x][y].scaling.y = 0.01;
-            this._downPlanes[x][y].scaling.z = 0.95;
+            this._downPlanes[x][y].scaling.z = 1;
             this._downPlanes[x][y].material = this._matYellow;
             this._downPlanes[x][y].parent = pivotCenter;
         }
@@ -134,13 +120,13 @@ Cube.prototype.initFaces = function() {
     // Left
     for (x = 0; x < 3; x++) {
         for (y = 0; y < 3; y++) {
-            this._leftPlanes[x][y] = BABYLON.Mesh.CreateBox("left" + x + y, 1, this._scene);
+            this._leftPlanes[x][y] = BABYLON.Mesh.CreateBox("O" + x + y, 1, this._scene);
             this._leftPlanes[x][y].position.x = 1.5;
             this._leftPlanes[x][y].position.y = y - 1;
             this._leftPlanes[x][y].position.z = x - 1;
             this._leftPlanes[x][y].scaling.x = 0.01;
-            this._leftPlanes[x][y].scaling.y = 0.95;
-            this._leftPlanes[x][y].scaling.z = 0.95;
+            this._leftPlanes[x][y].scaling.y = 1;
+            this._leftPlanes[x][y].scaling.z = 1;
             this._leftPlanes[x][y].material = this._matOrange;
             this._leftPlanes[x][y].parent = pivotCenter;
         }
@@ -149,17 +135,48 @@ Cube.prototype.initFaces = function() {
     // Right
     for (x = 0; x < 3; x++) {
         for (y = 0; y < 3; y++) {
-            this._rightPlanes[x][y] = BABYLON.Mesh.CreateBox("right" + x + y, 1, this._scene);
+            this._rightPlanes[x][y] = BABYLON.Mesh.CreateBox("R" + x + y, 1, this._scene);
             this._rightPlanes[x][y].position.x = -1.5;
             this._rightPlanes[x][y].position.y = y - 1;
             this._rightPlanes[x][y].position.z = x - 1;
             this._rightPlanes[x][y].scaling.x = 0.01;
-            this._rightPlanes[x][y].scaling.y = 0.95;
-            this._rightPlanes[x][y].scaling.z = 0.95;
+            this._rightPlanes[x][y].scaling.y = 1;
+            this._rightPlanes[x][y].scaling.z = 1;
             this._rightPlanes[x][y].material = this._matRed;
             this._rightPlanes[x][y].parent = pivotCenter;
         }
     }
+};
+
+
+Cube.prototype.getFacesColors = function() {
+    var colors = {};
+    colors._upPlanes = [];
+    colors._downPlanes = [];
+    colors._leftPlanes = [];
+    colors._rightPlanes = [];
+    colors._frontPlanes = [];
+    colors._backPlanes = [];
+
+    for(var x = 0; x < 3; x++) {
+        colors._upPlanes[x] = [];
+        colors._downPlanes[x] = [];
+        colors._leftPlanes[x] = [];
+        colors._rightPlanes[x] = [];
+        colors._frontPlanes[x] = [];
+        colors._backPlanes[x] = [];
+
+        for(var y = 0; y < 3; y++) {
+            colors._upPlanes[x][y] = this._upPlanes[x][y].name.substr(0,1);
+            colors._downPlanes[x][y] = this._downPlanes[x][y].name.substr(0,1);
+            colors._leftPlanes[x][y] = this._leftPlanes[x][y].name.substr(0,1);
+            colors._rightPlanes[x][y] = this._rightPlanes[x][y].name.substr(0,1);
+            colors._frontPlanes[x][y] = this._frontPlanes[x][y].name.substr(0,1);
+            colors._backPlanes[x][y] = this._backPlanes[x][y].name.substr(0,1);
+        }
+    }
+
+    return colors;
 };
 
 
@@ -466,19 +483,19 @@ Cube.prototype.turnFront = function(callback, reverse) {
         for (var i = 0; i < 3; i++) {
             this._rightPlanes[2][i].rotation.z -= coeff;
             this._rightPlanes[2][i].scaling.x = 0.01;
-            this._rightPlanes[2][i].scaling.y = 0.95;
+            this._rightPlanes[2][i].scaling.y = 1;
 
             this._upPlanes[i][2].rotation.z -= coeff;
             this._upPlanes[i][2].scaling.y = 0.01;
-            this._upPlanes[i][2].scaling.x = 0.95;
+            this._upPlanes[i][2].scaling.x = 1;
 
             this._leftPlanes[2][i].rotation.z -= coeff;
             this._leftPlanes[2][i].scaling.x = 0.01;
-            this._leftPlanes[2][i].scaling.y = 0.95;
+            this._leftPlanes[2][i].scaling.y = 1;
 
             this._downPlanes[i][2].rotation.z -= coeff;
             this._downPlanes[i][2].scaling.y = 0.01;
-            this._downPlanes[i][2].scaling.x = 0.95;
+            this._downPlanes[i][2].scaling.x = 1;
         }
 
         this._callback = null;
@@ -592,19 +609,19 @@ Cube.prototype.turnBack = function(callback, reverse) {
         for (var i = 0; i < 3; i++) {
             this._rightPlanes[0][i].rotation.z -= coeff;
             this._rightPlanes[0][i].scaling.x = 0.01;
-            this._rightPlanes[0][i].scaling.y = 0.95;
+            this._rightPlanes[0][i].scaling.y = 1;
 
             this._upPlanes[i][0].rotation.z -= coeff;
             this._upPlanes[i][0].scaling.y = 0.01;
-            this._upPlanes[i][0].scaling.x = 0.95;
+            this._upPlanes[i][0].scaling.x = 1;
 
             this._leftPlanes[0][i].rotation.z -= coeff;
             this._leftPlanes[0][i].scaling.x = 0.01;
-            this._leftPlanes[0][i].scaling.y = 0.95;
+            this._leftPlanes[0][i].scaling.y = 1;
 
             this._downPlanes[i][0].rotation.z -= coeff;
             this._downPlanes[i][0].scaling.y = 0.01;
-            this._downPlanes[i][0].scaling.x = 0.95;
+            this._downPlanes[i][0].scaling.x = 1;
         }
 
         this._callback = null;
@@ -718,19 +735,19 @@ Cube.prototype.turnLeft = function(callback, reverse) {
         for (var i = 0; i < 3; i++) {
             this._frontPlanes[2][i].rotation.x -= coeff;
             this._frontPlanes[2][i].scaling.z = 0.01;
-            this._frontPlanes[2][i].scaling.y = 0.95;
+            this._frontPlanes[2][i].scaling.y = 1;
 
             this._upPlanes[2][i].rotation.x -= coeff;
             this._upPlanes[2][i].scaling.y = 0.01;
-            this._upPlanes[2][i].scaling.z = 0.95;
+            this._upPlanes[2][i].scaling.z = 1;
 
             this._backPlanes[2][i].rotation.x -= coeff;
             this._backPlanes[2][i].scaling.z = 0.01;
-            this._backPlanes[2][i].scaling.y = 0.95;
+            this._backPlanes[2][i].scaling.y = 1;
 
             this._downPlanes[2][i].rotation.x -= coeff;
             this._downPlanes[2][i].scaling.y = 0.01;
-            this._downPlanes[2][i].scaling.z = 0.95;
+            this._downPlanes[2][i].scaling.z = 1;
         }
 
         this._callback = null;
@@ -844,19 +861,19 @@ Cube.prototype.turnRight = function(callback, reverse) {
         for (var i = 0; i < 3; i++) {
             this._frontPlanes[0][i].rotation.x -= coeff;
             this._frontPlanes[0][i].scaling.z = 0.01;
-            this._frontPlanes[0][i].scaling.y = 0.95;
+            this._frontPlanes[0][i].scaling.y = 1;
 
             this._upPlanes[0][i].rotation.x -= coeff;
             this._upPlanes[0][i].scaling.y = 0.01;
-            this._upPlanes[0][i].scaling.z = 0.95;
+            this._upPlanes[0][i].scaling.z = 1;
 
             this._backPlanes[0][i].rotation.x -= coeff;
             this._backPlanes[0][i].scaling.z = 0.01;
-            this._backPlanes[0][i].scaling.y = 0.95;
+            this._backPlanes[0][i].scaling.y = 1;
 
             this._downPlanes[0][i].rotation.x -= coeff;
             this._downPlanes[0][i].scaling.y = 0.01;
-            this._downPlanes[0][i].scaling.z = 0.95;
+            this._downPlanes[0][i].scaling.z = 1;
         }
 
         this._callback = null;
@@ -971,19 +988,19 @@ Cube.prototype.turnUp = function(callback, reverse) {
 
             this._rightPlanes[i][2].rotation.y += coeff;
             this._rightPlanes[i][2].scaling.x = 0.01;
-            this._rightPlanes[i][2].scaling.z = 0.95;
+            this._rightPlanes[i][2].scaling.z = 1;
 
             this._backPlanes[i][2].rotation.y += coeff;
             this._backPlanes[i][2].scaling.z = 0.01;
-            this._backPlanes[i][2].scaling.x = 0.95;
+            this._backPlanes[i][2].scaling.x = 1;
 
             this._leftPlanes[i][2].rotation.y += coeff;
             this._leftPlanes[i][2].scaling.x = 0.01;
-            this._leftPlanes[i][2].scaling.z = 0.95;
+            this._leftPlanes[i][2].scaling.z = 1;
 
             this._frontPlanes[i][2].rotation.y += coeff;
             this._frontPlanes[i][2].scaling.z = 0.01;
-            this._frontPlanes[i][2].scaling.x = 0.95;
+            this._frontPlanes[i][2].scaling.x = 1;
         }
 
         this._callback = null;
@@ -1097,20 +1114,20 @@ Cube.prototype.turnDown = function(callback, reverse) {
         for (var i = 0; i < 3; i++) {
             this._rightPlanes[i][0].rotation.y += coeff;
             this._rightPlanes[i][0].scaling.x = 0.01;
-            this._rightPlanes[i][0].scaling.z = 0.95;
+            this._rightPlanes[i][0].scaling.z = 1;
 
             this._backPlanes[i][0].rotation.y += coeff;
             this._backPlanes[i][0].scaling.z = 0.01;
-            this._backPlanes[i][0].scaling.x = 0.95;
+            this._backPlanes[i][0].scaling.x = 1;
 
             this._leftPlanes[i][0].rotation.y += coeff;
             this._leftPlanes[i][0].scaling.x = 0.01;
-            this._leftPlanes[i][0].scaling.z = 0.95;
+            this._leftPlanes[i][0].scaling.z = 1;
 
             this._frontPlanes[i][0].rotation.y += coeff;
             this._frontPlanes[i][0].scaling.z = 0.01;
-            this._frontPlanes[i][0].scaling.x = 0.95;
-            this._frontPlanes[i][0].scaling.x = 0.95;
+            this._frontPlanes[i][0].scaling.x = 1;
+            this._frontPlanes[i][0].scaling.x = 1;
         }
 
         this._callback = null;

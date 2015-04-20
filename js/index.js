@@ -38,14 +38,23 @@ function initScene() {
 
     var myController = new Controller(myCube);
 
+    var mySolver = new Solver(myController);
+
     engine.runRenderLoop(function () {
         scene.render();
+    });
+
+    window.addEventListener("resize", function () {
+        engine.resize();
     });
 
     //scene.debugLayer.show();
 
     document.getElementById("button_scramble").addEventListener('click', function () {
-        myController.scramble(10);
+        myController.scramble(15);
+    });
+    document.getElementById("button_solve").addEventListener('click', function () {
+        mySolver.solve();
     });
     document.getElementById("button_left").addEventListener('click', function () {
         myController.turnLeft();
