@@ -12,6 +12,8 @@ function Cube(scene) {
     this._leftPlanes = [[null, null, null], [null, null, null], [null, null, null]];
     this._rightPlanes = [[null, null, null], [null, null, null], [null, null, null]];
 
+    this._isExploded = false;
+
     this._stateBeforeMove = [];
     this._speed = 500;
 
@@ -21,34 +23,36 @@ function Cube(scene) {
 Cube.prototype.initColors = function() {
 
     this._matGreen = new BABYLON.StandardMaterial("green", this._scene);
-    this._matGreen.diffuseColor = new BABYLON.Color3(0, 1, 0);
-    this._matGreen.specularColor = new BABYLON.Color3.Black();
+    this._matGreen.specularColor = BABYLON.Color3.Black();
     this._matGreen.diffuseTexture =  new BABYLON.Texture("./assets/green.png", this._scene);
 
-    this._matBlue = new BABYLON.StandardMaterial("green", this._scene);
-    this._matBlue.diffuseColor = new BABYLON.Color3(0, 0, 1);
-    this._matBlue.specularColor = new BABYLON.Color3.Black();
+    this._matBlue = new BABYLON.StandardMaterial("blue", this._scene);
+    this._matBlue.specularColor = BABYLON.Color3.Black();
     this._matBlue.diffuseTexture =  new BABYLON.Texture("./assets/blue.png", this._scene);
 
-    this._matWhite = new BABYLON.StandardMaterial("green", this._scene);
-    this._matWhite.diffuseColor = new BABYLON.Color3(1, 1, 1);
-    this._matWhite.specularColor = new BABYLON.Color3.Black();
+    this._matWhite = new BABYLON.StandardMaterial("white", this._scene);
+    this._matWhite.specularColor = BABYLON.Color3.Black();
     this._matWhite.diffuseTexture =  new BABYLON.Texture("./assets/white.png", this._scene);
 
-    this._matYellow = new BABYLON.StandardMaterial("green", this._scene);
-    this._matYellow.diffuseColor = new BABYLON.Color3(1, 1, 0);
-    this._matYellow.specularColor = new BABYLON.Color3.Black();
+    this._matYellow = new BABYLON.StandardMaterial("yellow", this._scene);
+    this._matYellow.specularColor = BABYLON.Color3.Black();
     this._matYellow.diffuseTexture =  new BABYLON.Texture("./assets/yellow.png", this._scene);
 
-    this._matOrange = new BABYLON.StandardMaterial("green", this._scene);
-    this._matOrange.diffuseColor = new BABYLON.Color3(0.6, 0.3, 0);
-    this._matOrange.specularColor = new BABYLON.Color3.Black();
+    this._matOrange = new BABYLON.StandardMaterial("orange", this._scene);
+    this._matOrange.specularColor = BABYLON.Color3.Black();
     this._matOrange.diffuseTexture =  new BABYLON.Texture("./assets/orange.png", this._scene);
 
-    this._matRed = new BABYLON.StandardMaterial("green", this._scene);
-    this._matRed.diffuseColor = new BABYLON.Color3(1, 0, 0);
-    this._matRed.specularColor = new BABYLON.Color3.Black();
+    this._matRed = new BABYLON.StandardMaterial("red", this._scene);
+    this._matRed.specularColor = BABYLON.Color3.Black();
     this._matRed.diffuseTexture =  new BABYLON.Texture("./assets/red.png", this._scene);
+
+    this._matCenterPiece = new BABYLON.StandardMaterial("centerPiece", this._scene);
+    this._matCenterPiece.specularColor = BABYLON.Color3.Black();
+    this._matCenterPiece.diffuseColor = new BABYLON.Color3(0.35,0.35,0.35);
+
+    this._matCenterPieces = new BABYLON.StandardMaterial("centerPieces", this._scene);
+    this._matCenterPieces.specularColor = BABYLON.Color3.Black();
+    this._matCenterPieces.diffuseColor = new BABYLON.Color3(0.45,0.45,0.45);
 };
 
 Cube.prototype.initFaces = function() {
@@ -56,6 +60,38 @@ Cube.prototype.initFaces = function() {
     pivotCenter.visibility = false;
     var x = 0;
     var y = 0;
+
+    // Center pieces
+    this.centerPiece = BABYLON.Mesh.CreateSphere("centerPiece", 16, 0.5, this._scene);
+    this.centerPiece.material = this._matCenterPiece;
+
+    this.cylinderL = BABYLON.Mesh.CreateCylinder("cylinderL", 1.5, 0.2, 0.2, 16, 2, this._scene);
+    this.cylinderL.position.x = 0.75;
+    this.cylinderL.rotation.z = Math.PI / 2;
+    this.cylinderL.material = this._matCenterPieces;
+
+    this.cylinderR = BABYLON.Mesh.CreateCylinder("cylinderR", 1.5, 0.2, 0.2, 16, 2, this._scene);
+    this.cylinderR.position.x = -0.75;
+    this.cylinderR.rotation.z = -Math.PI / 2;
+    this.cylinderR.material = this._matCenterPieces;
+
+    this.cylinderF = BABYLON.Mesh.CreateCylinder("cylinderF", 1.5, 0.2, 0.2, 16, 2, this._scene);
+    this.cylinderF.position.z = 0.75;
+    this.cylinderF.rotation.x = Math.PI / 2;
+    this.cylinderF.material = this._matCenterPieces;
+
+    this.cylinderB = BABYLON.Mesh.CreateCylinder("cylinderB", 1.5, 0.2, 0.2, 16, 2, this._scene);
+    this.cylinderB.position.z = -0.75;
+    this.cylinderB.rotation.x = -Math.PI / 2;
+    this.cylinderB.material = this._matCenterPieces;
+
+    this.cylinderU = BABYLON.Mesh.CreateCylinder("cylinderU", 1.5, 0.2, 0.2, 16, 2, this._scene);
+    this.cylinderU.position.y = 0.75;
+    this.cylinderU.material = this._matCenterPieces;
+
+    this.cylinderD = BABYLON.Mesh.CreateCylinder("cylinderD", 1.5, 0.2, 0.2, 16, 2, this._scene);
+    this.cylinderD.position.y = -0.75;
+    this.cylinderD.material = this._matCenterPieces;
 
     // Front
     for (x = 0; x < 3; x++) {
@@ -66,7 +102,7 @@ Cube.prototype.initFaces = function() {
             this._frontPlanes[x][y].position.z = +1.5;
             this._frontPlanes[x][y].scaling.x = 1;
             this._frontPlanes[x][y].scaling.y = 1;
-            this._frontPlanes[x][y].scaling.z = 0.01;
+            this._frontPlanes[x][y].scaling.z = 0.001;
             this._frontPlanes[x][y].material = this._matGreen;
             this._frontPlanes[x][y].parent = pivotCenter;
         }
@@ -81,7 +117,7 @@ Cube.prototype.initFaces = function() {
             this._backPlanes[x][y].position.z = -1.5;
             this._backPlanes[x][y].scaling.x = 1;
             this._backPlanes[x][y].scaling.y = 1;
-            this._backPlanes[x][y].scaling.z = 0.01;
+            this._backPlanes[x][y].scaling.z = 0.001;
             this._backPlanes[x][y].material = this._matBlue;
             this._backPlanes[x][y].parent = pivotCenter;
         }
@@ -95,7 +131,7 @@ Cube.prototype.initFaces = function() {
             this._upPlanes[x][y].position.y = +1.5;
             this._upPlanes[x][y].position.z = y - 1;
             this._upPlanes[x][y].scaling.x = 1;
-            this._upPlanes[x][y].scaling.y = 0.01;
+            this._upPlanes[x][y].scaling.y = 0.001;
             this._upPlanes[x][y].scaling.z = 1;
             this._upPlanes[x][y].material = this._matWhite;
             this._upPlanes[x][y].parent = pivotCenter;
@@ -110,7 +146,7 @@ Cube.prototype.initFaces = function() {
             this._downPlanes[x][y].position.y = -1.5;
             this._downPlanes[x][y].position.z = y - 1;
             this._downPlanes[x][y].scaling.x = 1;
-            this._downPlanes[x][y].scaling.y = 0.01;
+            this._downPlanes[x][y].scaling.y = 0.001;
             this._downPlanes[x][y].scaling.z = 1;
             this._downPlanes[x][y].material = this._matYellow;
             this._downPlanes[x][y].parent = pivotCenter;
@@ -124,7 +160,7 @@ Cube.prototype.initFaces = function() {
             this._leftPlanes[x][y].position.x = 1.5;
             this._leftPlanes[x][y].position.y = y - 1;
             this._leftPlanes[x][y].position.z = x - 1;
-            this._leftPlanes[x][y].scaling.x = 0.01;
+            this._leftPlanes[x][y].scaling.x = 0.001;
             this._leftPlanes[x][y].scaling.y = 1;
             this._leftPlanes[x][y].scaling.z = 1;
             this._leftPlanes[x][y].material = this._matOrange;
@@ -139,7 +175,7 @@ Cube.prototype.initFaces = function() {
             this._rightPlanes[x][y].position.x = -1.5;
             this._rightPlanes[x][y].position.y = y - 1;
             this._rightPlanes[x][y].position.z = x - 1;
-            this._rightPlanes[x][y].scaling.x = 0.01;
+            this._rightPlanes[x][y].scaling.x = 0.001;
             this._rightPlanes[x][y].scaling.y = 1;
             this._rightPlanes[x][y].scaling.z = 1;
             this._rightPlanes[x][y].material = this._matRed;
@@ -482,19 +518,19 @@ Cube.prototype.turnFront = function(callback, reverse) {
         }
         for (var i = 0; i < 3; i++) {
             this._rightPlanes[2][i].rotation.z -= coeff;
-            this._rightPlanes[2][i].scaling.x = 0.01;
+            this._rightPlanes[2][i].scaling.x = 0.001;
             this._rightPlanes[2][i].scaling.y = 1;
 
             this._upPlanes[i][2].rotation.z -= coeff;
-            this._upPlanes[i][2].scaling.y = 0.01;
+            this._upPlanes[i][2].scaling.y = 0.001;
             this._upPlanes[i][2].scaling.x = 1;
 
             this._leftPlanes[2][i].rotation.z -= coeff;
-            this._leftPlanes[2][i].scaling.x = 0.01;
+            this._leftPlanes[2][i].scaling.x = 0.001;
             this._leftPlanes[2][i].scaling.y = 1;
 
             this._downPlanes[i][2].rotation.z -= coeff;
-            this._downPlanes[i][2].scaling.y = 0.01;
+            this._downPlanes[i][2].scaling.y = 0.001;
             this._downPlanes[i][2].scaling.x = 1;
         }
 
@@ -608,19 +644,19 @@ Cube.prototype.turnBack = function(callback, reverse) {
         }
         for (var i = 0; i < 3; i++) {
             this._rightPlanes[0][i].rotation.z -= coeff;
-            this._rightPlanes[0][i].scaling.x = 0.01;
+            this._rightPlanes[0][i].scaling.x = 0.001;
             this._rightPlanes[0][i].scaling.y = 1;
 
             this._upPlanes[i][0].rotation.z -= coeff;
-            this._upPlanes[i][0].scaling.y = 0.01;
+            this._upPlanes[i][0].scaling.y = 0.001;
             this._upPlanes[i][0].scaling.x = 1;
 
             this._leftPlanes[0][i].rotation.z -= coeff;
-            this._leftPlanes[0][i].scaling.x = 0.01;
+            this._leftPlanes[0][i].scaling.x = 0.001;
             this._leftPlanes[0][i].scaling.y = 1;
 
             this._downPlanes[i][0].rotation.z -= coeff;
-            this._downPlanes[i][0].scaling.y = 0.01;
+            this._downPlanes[i][0].scaling.y = 0.001;
             this._downPlanes[i][0].scaling.x = 1;
         }
 
@@ -734,19 +770,19 @@ Cube.prototype.turnLeft = function(callback, reverse) {
         }
         for (var i = 0; i < 3; i++) {
             this._frontPlanes[2][i].rotation.x -= coeff;
-            this._frontPlanes[2][i].scaling.z = 0.01;
+            this._frontPlanes[2][i].scaling.z = 0.001;
             this._frontPlanes[2][i].scaling.y = 1;
 
             this._upPlanes[2][i].rotation.x -= coeff;
-            this._upPlanes[2][i].scaling.y = 0.01;
+            this._upPlanes[2][i].scaling.y = 0.001;
             this._upPlanes[2][i].scaling.z = 1;
 
             this._backPlanes[2][i].rotation.x -= coeff;
-            this._backPlanes[2][i].scaling.z = 0.01;
+            this._backPlanes[2][i].scaling.z = 0.001;
             this._backPlanes[2][i].scaling.y = 1;
 
             this._downPlanes[2][i].rotation.x -= coeff;
-            this._downPlanes[2][i].scaling.y = 0.01;
+            this._downPlanes[2][i].scaling.y = 0.001;
             this._downPlanes[2][i].scaling.z = 1;
         }
 
@@ -860,19 +896,19 @@ Cube.prototype.turnRight = function(callback, reverse) {
         }
         for (var i = 0; i < 3; i++) {
             this._frontPlanes[0][i].rotation.x -= coeff;
-            this._frontPlanes[0][i].scaling.z = 0.01;
+            this._frontPlanes[0][i].scaling.z = 0.001;
             this._frontPlanes[0][i].scaling.y = 1;
 
             this._upPlanes[0][i].rotation.x -= coeff;
-            this._upPlanes[0][i].scaling.y = 0.01;
+            this._upPlanes[0][i].scaling.y = 0.001;
             this._upPlanes[0][i].scaling.z = 1;
 
             this._backPlanes[0][i].rotation.x -= coeff;
-            this._backPlanes[0][i].scaling.z = 0.01;
+            this._backPlanes[0][i].scaling.z = 0.001;
             this._backPlanes[0][i].scaling.y = 1;
 
             this._downPlanes[0][i].rotation.x -= coeff;
-            this._downPlanes[0][i].scaling.y = 0.01;
+            this._downPlanes[0][i].scaling.y = 0.001;
             this._downPlanes[0][i].scaling.z = 1;
         }
 
@@ -987,19 +1023,19 @@ Cube.prototype.turnUp = function(callback, reverse) {
         for (var i = 0; i < 3; i++) {
 
             this._rightPlanes[i][2].rotation.y += coeff;
-            this._rightPlanes[i][2].scaling.x = 0.01;
+            this._rightPlanes[i][2].scaling.x = 0.001;
             this._rightPlanes[i][2].scaling.z = 1;
 
             this._backPlanes[i][2].rotation.y += coeff;
-            this._backPlanes[i][2].scaling.z = 0.01;
+            this._backPlanes[i][2].scaling.z = 0.001;
             this._backPlanes[i][2].scaling.x = 1;
 
             this._leftPlanes[i][2].rotation.y += coeff;
-            this._leftPlanes[i][2].scaling.x = 0.01;
+            this._leftPlanes[i][2].scaling.x = 0.001;
             this._leftPlanes[i][2].scaling.z = 1;
 
             this._frontPlanes[i][2].rotation.y += coeff;
-            this._frontPlanes[i][2].scaling.z = 0.01;
+            this._frontPlanes[i][2].scaling.z = 0.001;
             this._frontPlanes[i][2].scaling.x = 1;
         }
 
@@ -1113,19 +1149,19 @@ Cube.prototype.turnDown = function(callback, reverse) {
         }
         for (var i = 0; i < 3; i++) {
             this._rightPlanes[i][0].rotation.y += coeff;
-            this._rightPlanes[i][0].scaling.x = 0.01;
+            this._rightPlanes[i][0].scaling.x = 0.001;
             this._rightPlanes[i][0].scaling.z = 1;
 
             this._backPlanes[i][0].rotation.y += coeff;
-            this._backPlanes[i][0].scaling.z = 0.01;
+            this._backPlanes[i][0].scaling.z = 0.001;
             this._backPlanes[i][0].scaling.x = 1;
 
             this._leftPlanes[i][0].rotation.y += coeff;
-            this._leftPlanes[i][0].scaling.x = 0.01;
+            this._leftPlanes[i][0].scaling.x = 0.001;
             this._leftPlanes[i][0].scaling.z = 1;
 
             this._frontPlanes[i][0].rotation.y += coeff;
-            this._frontPlanes[i][0].scaling.z = 0.01;
+            this._frontPlanes[i][0].scaling.z = 0.001;
             this._frontPlanes[i][0].scaling.x = 1;
             this._frontPlanes[i][0].scaling.x = 1;
         }
@@ -1159,4 +1195,127 @@ Cube.prototype.turnDown = function(callback, reverse) {
     this._rotateAroundY(this._frontPlanes[0][0], coeff, true);
     this._rotateAroundY(this._frontPlanes[1][0], coeff, true);
     this._rotateAroundY(this._frontPlanes[2][0], coeff, true);
+};
+
+
+/** Exploded view */
+// True to go to exploded view, false to rearrange it
+Cube.prototype.explodedView = function() {
+    var x = 0, y = 0;
+    this._isExploded = this._isExploded ? false : true;
+
+    // Explode the cube
+    if(this._isExploded) {
+        this.cylinderL.position.x = 1.2;
+        this.cylinderR.position.x = -1.2;
+        this.cylinderF.position.z = 1.2;
+        this.cylinderB.position.z = -1.2;
+        this.cylinderU.position.y = 1.2;
+        this.cylinderD.position.y = -1.2;
+        // Front
+        for (x = 0; x < 3; x++) {
+            for (y = 0; y < 3; y++) {
+                this._frontPlanes[x][y].position.x = (x - 1) * 1.5;
+                this._frontPlanes[x][y].position.y = (y - 1) * 1.5;
+                this._frontPlanes[x][y].position.z = (+ 1.5) * 1.5;
+            }
+        }
+        // Back
+        for (x = 0; x < 3; x++) {
+            for (y = 0; y < 3; y++) {
+                this._backPlanes[x][y].position.x = (x - 1) * 1.5;
+                this._backPlanes[x][y].position.y = (y - 1) * 1.5;
+                this._backPlanes[x][y].position.z = (- 1.5) * 1.5;
+            }
+        }
+        // Up
+        for (x = 0; x < 3; x++) {
+            for (y = 0; y < 3; y++) {
+                this._upPlanes[x][y].position.x = (x - 1) * 1.5;
+                this._upPlanes[x][y].position.y = (+ 1.5) * 1.5;
+                this._upPlanes[x][y].position.z = (y - 1) * 1.5;
+            }
+        }
+        // Down
+        for (x = 0; x < 3; x++) {
+            for (y = 0; y < 3; y++) {
+                this._downPlanes[x][y].position.x = (x - 1) * 1.5;
+                this._downPlanes[x][y].position.y = (- 1.5) * 1.5;
+                this._downPlanes[x][y].position.z = (y - 1) * 1.5;
+            }
+        }
+        // Left
+        for (x = 0; x < 3; x++) {
+            for (y = 0; y < 3; y++) {
+                this._leftPlanes[x][y].position.x = ( 1.5) * 1.5;
+                this._leftPlanes[x][y].position.y = (y - 1) * 1.5;
+                this._leftPlanes[x][y].position.z = (x - 1) * 1.5;
+            }
+        }
+        // Right
+        for (x = 0; x < 3; x++) {
+            for (y = 0; y < 3; y++) {
+                this._rightPlanes[x][y].position.x = (- 1.5) * 1.5;
+                this._rightPlanes[x][y].position.y = (y - 1) * 1.5;
+                this._rightPlanes[x][y].position.z = (x - 1) * 1.5;
+            }
+        }
+    }
+    // Reconstruct the cube
+    else {
+        this.cylinderL.position.x = 0.75;
+        this.cylinderR.position.x = -0.75;
+        this.cylinderF.position.z = 0.75;
+        this.cylinderB.position.z = -0.75;
+        this.cylinderU.position.y = 0.75;
+        this.cylinderD.position.y = -0.75;
+        // Front
+        for (x = 0; x < 3; x++) {
+            for (y = 0; y < 3; y++) {
+                this._frontPlanes[x][y].position.x = x - 1;
+                this._frontPlanes[x][y].position.y = y - 1;
+                this._frontPlanes[x][y].position.z = +1.5;
+            }
+        }
+        // Back
+        for (x = 0; x < 3; x++) {
+            for (y = 0; y < 3; y++) {
+                this._backPlanes[x][y].position.x = x - 1;
+                this._backPlanes[x][y].position.y = y - 1;
+                this._backPlanes[x][y].position.z = -1.5;
+            }
+        }
+        // Up
+        for (x = 0; x < 3; x++) {
+            for (y = 0; y < 3; y++) {
+                this._upPlanes[x][y].position.x = x - 1;
+                this._upPlanes[x][y].position.y = +1.5;
+                this._upPlanes[x][y].position.z = y - 1;
+            }
+        }
+        // Down
+        for (x = 0; x < 3; x++) {
+            for (y = 0; y < 3; y++) {
+                this._downPlanes[x][y].position.x = x - 1;
+                this._downPlanes[x][y].position.y = -1.5;
+                this._downPlanes[x][y].position.z = y - 1;
+            }
+        }
+        // Left
+        for (x = 0; x < 3; x++) {
+            for (y = 0; y < 3; y++) {
+                this._leftPlanes[x][y].position.x = 1.5;
+                this._leftPlanes[x][y].position.y = y - 1;
+                this._leftPlanes[x][y].position.z = x - 1;
+            }
+        }
+        // Right
+        for (x = 0; x < 3; x++) {
+            for (y = 0; y < 3; y++) {
+                this._rightPlanes[x][y].position.x = -1.5;
+                this._rightPlanes[x][y].position.y = y - 1;
+                this._rightPlanes[x][y].position.z = x - 1;
+            }
+        }
+    }
 };

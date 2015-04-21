@@ -23,6 +23,7 @@ function initScene() {
 
     // Create the camera
     var camera = new BABYLON.ArcRotateCamera("Camera", Math.PI / 8 * 5.5, Math.PI / 3, 8, BABYLON.Vector3.Zero(), scene);
+    camera.wheelPrecision = 200;
     camera.attachControl(canvas);
 
     // Create light
@@ -41,6 +42,9 @@ function initScene() {
     var mySolver = new Solver(myController);
 
     engine.runRenderLoop(function () {
+        if(camera.radius < 3.15) {
+            camera.radius = 3.15;
+        }
         scene.render();
     });
 
@@ -50,6 +54,9 @@ function initScene() {
 
     //scene.debugLayer.show();
 
+    document.getElementById("button_explode").addEventListener('click', function () {
+        myCube.explodedView();
+    });
     document.getElementById("button_scramble").addEventListener('click', function () {
         myController.scramble(15);
     });
