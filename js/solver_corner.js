@@ -289,6 +289,127 @@ Solver.prototype.step_corner_D = function(that) {
     );
 };
 
+// Last 4 corners - orientation
+Solver.prototype.step_corner_Y = function(that) {
+    var corners = false;
+
+    do {
+
+        // If cube is correctly oriented, turn the face
+        if(that.faceColors._upPlanes[0][2] == 'W') {
+            that.turnUp(that, true);
+        }
+        // Else, try to match it with another piece
+        else {
+
+            if(that.faceColors._upPlanes[0][0] != 'W') {
+                that.corner_orient_UP_RIGHT(that);
+            }
+            else if(that.faceColors._upPlanes[2][0] != 'W') {
+                that.turnBack(that, false);
+                that.corner_orient_UP_RIGHT(that);
+                that.turnBack(that, true);
+            }
+            else if(that.faceColors._upPlanes[2][2] != 'W') {
+                that.turnLeft(that, false);
+                that.turnBack(that, false);
+                that.corner_orient_UP_RIGHT(that);
+                that.turnBack(that, true);
+                that.turnLeft(that, true);
+            }
+        }
+
+        // Top corners orientation ok
+        if(that.faceColors._upPlanes[0][2] == 'W'
+        && that.faceColors._upPlanes[0][0] == 'W'
+        && that.faceColors._upPlanes[2][0] == 'W'
+        && that.faceColors._upPlanes[2][2] == 'W') {
+            corners = true;
+        }
+    }while(!corners);
+};
+// Last 4 corners - placement
+Solver.prototype.step_corner_Z = function(that) {
+    var corners = false;
+    var number = 0;
+
+    do {
+
+        if(that.faceColors._frontPlanes[2][2] == 'G') {
+            if(that.faceColors._frontPlanes[0][2] == 'R') {
+                console.log("G - R");
+                that.corner_placement_A(that);
+            }
+            else if(that.faceColors._frontPlanes[0][2] == 'B') {
+                console.log("G - B");
+                that.turnUp(that, true);
+                that.corner_placement_B(that);
+                that.turnUp(that, false);
+            }
+        }
+        else if(that.faceColors._leftPlanes[0][2] == 'O') {
+            if(that.faceColors._leftPlanes[2][2] == 'G') {
+                console.log("O - G");
+                that.turnUp(that, false);
+                that.corner_placement_A(that);
+                that.turnUp(that, true);
+            }
+            else if(that.faceColors._leftPlanes[2][2] == 'R') {
+                console.log("O - R");
+                that.turnUp(that, false);
+                that.corner_placement_B(that);
+                that.turnUp(that, true);
+            }
+        }
+        else if(that.faceColors._backPlanes[0][2] == 'B') {
+            if (that.faceColors._backPlanes[2][2] == 'O') {
+                console.log("B - O");
+                that.corner_placement_B(that);
+            }
+            else if (that.faceColors._backPlanes[2][2] == 'G') {
+                console.log("B - G");
+                that.turnUp(that, false);
+                that.turnUp(that, false);
+                that.corner_placement_A(that);
+                that.turnUp(that, true);
+                that.turnUp(that, true);
+            }
+        }
+        else if(that.faceColors._rightPlanes[2][2] == 'R') {
+            if(that.faceColors._rightPlanes[0][2] == 'B') {
+                console.log("R - B");
+                that.turnUp(that, true);
+                that.corner_placement_A(that);
+                that.turnUp(that, false);
+            }
+            else if(that.faceColors._rightPlanes[0][2] == 'O') {
+                console.log("R - O");
+                that.turnUp(that, false);
+                that.turnUp(that, false);
+                that.corner_placement_B(that);
+                that.turnUp(that, true);
+                that.turnUp(that, true);
+            }
+        }
+        else {
+            console.log("E");
+            that.corner_placement_E(that);
+        }
+
+        // Top corners orientation ok
+        if(that.faceColors._frontPlanes[2][2] == 'G'
+            && that.faceColors._leftPlanes[0][2] == 'O'
+            && that.faceColors._backPlanes[0][2] == 'B'
+            && that.faceColors._rightPlanes[2][2] == 'R') {
+            corners = true;
+        }
+
+        number++;
+        if(number > 10) {
+            return;
+        }
+    }while(!corners);
+};
 
 
 // CORNERS MOVES *********************************************************************************************************
@@ -770,4 +891,72 @@ Solver.prototype.corner_H_to_D = function(that, sens) {
         that.turnUp(that, true);
         that.turnLeft(that, false);
     }
+};
+
+// Orientation
+Solver.prototype.corner_orient_UP_RIGHT = function(that) {
+    that.turnRight(that, true);
+    that.turnUp(that, true);
+    that.turnUp(that, true);
+    that.turnRight(that, false);
+    that.turnUp(that, false);
+    that.turnRight(that, true);
+    that.turnUp(that, false);
+    that.turnRight(that, false);
+    that.turnLeft(that, false);
+    that.turnUp(that, true);
+    that.turnUp(that, true);
+    that.turnLeft(that, true);
+    that.turnUp(that, true);
+    that.turnLeft(that, false);
+    that.turnUp(that, true);
+    that.turnLeft(that, true);
+};
+
+// Placement
+Solver.prototype.corner_placement_A = function(that) {
+    that.turnRight(that, false);
+    that.turnFront(that, true);
+    that.turnRight(that, false);
+    that.turnBack(that, true);
+    that.turnBack(that, true);
+    that.turnRight(that, true);
+    that.turnFront(that, false);
+    that.turnRight(that, false);
+    that.turnBack(that, true);
+    that.turnBack(that, true);
+    that.turnRight(that, true);
+    that.turnRight(that, true);
+};
+Solver.prototype.corner_placement_B = function(that) {
+    that.turnRight(that, true);
+    that.turnBack(that, false);
+    that.turnRight(that, true);
+    that.turnFront(that, true);
+    that.turnFront(that, true);
+    that.turnRight(that, false);
+    that.turnBack(that, true);
+    that.turnRight(that, true);
+    that.turnFront(that, true);
+    that.turnFront(that, true);
+    that.turnRight(that, true);
+    that.turnRight(that, true);
+};
+Solver.prototype.corner_placement_E = function(that) {
+    that.turnDown(that, true);
+    that.turnRight(that, false);
+    that.turnDown(that, true);
+    that.turnDown(that, true);
+    that.turnFront(that, false);
+    that.turnDown(that, true);
+    that.turnLeft(that, true);
+    that.turnDown(that, false);
+    that.turnFront(that, true);
+    that.turnDown(that, true);
+    that.turnDown(that, true);
+    that.turnRight(that, true);
+    that.turnDown(that, false);
+    that.turnFront(that, false);
+    that.turnLeft(that, false);
+    that.turnFront(that, true);
 };

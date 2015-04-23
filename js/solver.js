@@ -19,7 +19,9 @@ function Solver(controller) {
         this.step_edge_6,
         this.step_edge_7,
         this.step_edge_8,
-        this.step_edge_9
+        this.step_edge_9,
+        this.step_corner_Y,
+        this.step_corner_Z
     ];
 }
 

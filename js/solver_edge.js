@@ -229,6 +229,7 @@ Solver.prototype.step_edge_3 = function(that) {
         ]
     );
 };
+
 // Solve the Green-Red edge
 Solver.prototype.step_edge_4 = function(that) {
     var color_1 = "G";
@@ -329,6 +330,7 @@ Solver.prototype.step_edge_7 = function(that) {
         ]
     );
 };
+
 // Solve the White up edge
 Solver.prototype.step_edge_8 = function(that) {
     var move = function() {
@@ -546,7 +548,6 @@ Solver.prototype.step_edge_9 = function(that) {
         }
     }
 };
-
 
 
 // EDGES MOVES *********************************************************************************************************
