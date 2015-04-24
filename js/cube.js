@@ -13,7 +13,7 @@ function Cube(scene) {
     this._rightPlanes = [[null, null, null], [null, null, null], [null, null, null]];
 
     this._stateBeforeMove = [];
-    this._speed = 5000;
+    this._speed = 10000;
 
 }
 
@@ -24,23 +24,23 @@ Cube.prototype.initColors = function() {
     this._matGreen.diffuseColor = new BABYLON.Color3(0, 1, 0);
     this._matGreen.specularColor = new BABYLON.Color3.Black();
 
-    this._matBlue = new BABYLON.StandardMaterial("green", this._scene);
+    this._matBlue = new BABYLON.StandardMaterial("blue", this._scene);
     this._matBlue.diffuseColor = new BABYLON.Color3(0, 0, 1);
     this._matBlue.specularColor = new BABYLON.Color3.Black();
 
-    this._matWhite = new BABYLON.StandardMaterial("green", this._scene);
+    this._matWhite = new BABYLON.StandardMaterial("white", this._scene);
     this._matWhite.diffuseColor = new BABYLON.Color3(1, 1, 1);
     this._matWhite.specularColor = new BABYLON.Color3.Black();
 
-    this._matYellow = new BABYLON.StandardMaterial("green", this._scene);
+    this._matYellow = new BABYLON.StandardMaterial("yellow", this._scene);
     this._matYellow.diffuseColor = new BABYLON.Color3(1, 1, 0);
     this._matYellow.specularColor = new BABYLON.Color3.Black();
 
-    this._matOrange = new BABYLON.StandardMaterial("green", this._scene);
+    this._matOrange = new BABYLON.StandardMaterial("orange", this._scene);
     this._matOrange.diffuseColor = new BABYLON.Color3(0.6, 0.3, 0);
     this._matOrange.specularColor = new BABYLON.Color3.Black();
 
-    this._matRed = new BABYLON.StandardMaterial("green", this._scene);
+    this._matRed = new BABYLON.StandardMaterial("red", this._scene);
     this._matRed.diffuseColor = new BABYLON.Color3(1, 0, 0);
     this._matRed.specularColor = new BABYLON.Color3.Black();
 };
