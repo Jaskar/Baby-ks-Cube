@@ -151,6 +151,7 @@ Controller.prototype.scramble = function(number) {
         }
     }
 
+    console.log("Scramble :");
     console.log(scrambleSequence);
 
     if (! this.isTurning) {

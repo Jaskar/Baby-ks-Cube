@@ -289,7 +289,12 @@ Solver.prototype.step_corner_D = function(that) {
     );
 };
 
+// Last 4 corners - orientation
+Solver.prototype.step_corner_Y = function(that) {
+    var corners = false;
+    var numberUp = 0;
 
+    do {
 
         // Top corners orientation ok
         if(that.faceColors._upPlanes[0][2] == 'W'
@@ -421,6 +426,8 @@ Solver.prototype.step_corner_Z = function(that) {
         }
     }while(!corners);
 };
+
+
 // CORNERS MOVES *********************************************************************************************************
 
 
@@ -900,4 +907,72 @@ Solver.prototype.corner_H_to_D = function(that, sens) {
         that.turnUp(that, true);
         that.turnLeft(that, false);
     }
+};
+
+// Orientation
+Solver.prototype.corner_orient_UP_RIGHT = function(that) {
+    that.turnRight(that, true);
+    that.turnUp(that, true);
+    that.turnUp(that, true);
+    that.turnRight(that, false);
+    that.turnUp(that, false);
+    that.turnRight(that, true);
+    that.turnUp(that, false);
+    that.turnRight(that, false);
+    that.turnLeft(that, false);
+    that.turnUp(that, true);
+    that.turnUp(that, true);
+    that.turnLeft(that, true);
+    that.turnUp(that, true);
+    that.turnLeft(that, false);
+    that.turnUp(that, true);
+    that.turnLeft(that, true);
+};
+
+// Placement
+Solver.prototype.corner_placement_A = function(that) {
+    that.turnRight(that, false);
+    that.turnFront(that, true);
+    that.turnRight(that, false);
+    that.turnBack(that, true);
+    that.turnBack(that, true);
+    that.turnRight(that, true);
+    that.turnFront(that, false);
+    that.turnRight(that, false);
+    that.turnBack(that, true);
+    that.turnBack(that, true);
+    that.turnRight(that, true);
+    that.turnRight(that, true);
+};
+Solver.prototype.corner_placement_B = function(that) {
+    that.turnRight(that, true);
+    that.turnBack(that, false);
+    that.turnRight(that, true);
+    that.turnFront(that, true);
+    that.turnFront(that, true);
+    that.turnRight(that, false);
+    that.turnBack(that, true);
+    that.turnRight(that, true);
+    that.turnFront(that, true);
+    that.turnFront(that, true);
+    that.turnRight(that, true);
+    that.turnRight(that, true);
+};
+Solver.prototype.corner_placement_E = function(that) {
+    that.turnDown(that, true);
+    that.turnRight(that, false);
+    that.turnDown(that, true);
+    that.turnDown(that, true);
+    that.turnFront(that, false);
+    that.turnDown(that, true);
+    that.turnLeft(that, true);
+    that.turnDown(that, false);
+    that.turnFront(that, true);
+    that.turnDown(that, true);
+    that.turnDown(that, true);
+    that.turnRight(that, true);
+    that.turnDown(that, false);
+    that.turnFront(that, false);
+    that.turnLeft(that, false);
+    that.turnFront(that, true);
 };
