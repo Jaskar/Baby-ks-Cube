@@ -19,6 +19,9 @@ function Cube(scene) {
 
 }
 
+Cube.prototype.setSpeed = function(value) {
+    this._speed = value;
+};
 
 Cube.prototype.initColors = function() {
 

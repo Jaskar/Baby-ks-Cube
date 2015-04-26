@@ -21,6 +21,8 @@ function initScene() {
     // Create scene
     var scene = new BABYLON.Scene(engine);
 
+    scene.clearColor = BABYLON.Color3.FromInts(149, 165, 166);
+
     // Create the camera
     var camera = new BABYLON.ArcRotateCamera("Camera", Math.PI / 8 * 5.5, Math.PI / 3, 8, BABYLON.Vector3.Zero(), scene);
     camera.wheelPrecision = 200;
@@ -41,6 +43,8 @@ function initScene() {
 
     var mySolver = new Solver(myController);
 
+    var myView = new View(myCube, myController, mySolver);
+
     engine.runRenderLoop(function () {
         if(camera.radius < 3.15) {
             camera.radius = 3.15;
@@ -53,50 +57,4 @@ function initScene() {
     });
 
     //scene.debugLayer.show();
-
-    document.getElementById("button_explode").addEventListener('click', function () {
-        myCube.explodedView();
-    });
-    document.getElementById("button_scramble").addEventListener('click', function () {
-        myController.scramble(15);
-    });
-    document.getElementById("button_solve").addEventListener('click', function () {
-        mySolver.solve();
-    });
-    document.getElementById("button_left").addEventListener('click', function () {
-        myController.turnLeft();
-    });
-    document.getElementById("button_leftprime").addEventListener('click', function () {
-        myController.turnLeftReverse();
-    });
-    document.getElementById("button_right").addEventListener('click', function () {
-        myController.turnRight();
-    });
-    document.getElementById("button_rightprime").addEventListener('click', function () {
-        myController.turnRightReverse();
-    });
-    document.getElementById("button_up").addEventListener('click', function () {
-        myController.turnUp();
-    });
-    document.getElementById("button_upprime").addEventListener('click', function () {
-        myController.turnUpReverse();
-    });
-    document.getElementById("button_front").addEventListener('click', function () {
-        myController.turnFront();
-    });
-    document.getElementById("button_frontprime").addEventListener('click', function () {
-        myController.turnFrontReverse();
-    });
-    document.getElementById("button_down").addEventListener('click', function () {
-        myController.turnDown();
-    });
-    document.getElementById("button_downprime").addEventListener('click', function () {
-        myController.turnDownReverse();
-    });
-    document.getElementById("button_back").addEventListener('click', function () {
-        myController.turnBack();
-    });
-    document.getElementById("button_backprime").addEventListener('click', function () {
-        myController.turnBackReverse();
-    });
 }

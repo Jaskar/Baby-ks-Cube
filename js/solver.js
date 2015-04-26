@@ -35,9 +35,9 @@ Solver.prototype.solve = function() {
         step(that);
     });
 
-    console.log("Solver : ");
-    console.log(this.resolveSequence);
     this.doMoves(that);
+
+    return this.resolveSequence;
 };
 
 Solver.prototype.doMoves = function(that) {

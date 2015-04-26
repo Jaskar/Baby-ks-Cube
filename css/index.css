@@ -15,8 +15,113 @@ root, html, body {
     padding: 0px;
 }
 
+button:focus {
+    outline: none;
+}
+
 #buttonsDiv {
     position: fixed;
     top: 0px;
     margin: auto;
+}
+
+#left_buttons {
+    left: 5px;
+}
+#right_buttons {
+    right: 5px;
+}
+
+.column_buttons {
+    position: fixed;
+    top: calc(50% - 96px);
+    text-align: center;
+
+    background-color: #ecf0f1;
+    color: #3498db;
+    border: double 3px #ecf0f1;
+    border-radius: 7px;
+
+    margin: 0px 8px 0px 8px;
+}
+.column_buttons .buttons_title {
+    margin: 3px;
+    margin-bottom: 5px;
+}
+.column_buttons button {
+    display: block;
+    cursor: pointer;
+
+    color: #ecf0f1;
+    font-weight: 18px;
+
+    background-color: #3498db;
+    border: none;
+
+    height: 22px;
+    width: 75px;
+    padding: 2px;
+    margin: 3px;
+    margin-top: 5px;
+}
+
+#center_buttons {
+    position: fixed;
+    top: 0px;
+    left: calc(50% - 165px);
+
+    background-color: #ecf0f1;
+    color: #3498db;
+    border: double 3px #ecf0f1;
+}
+#center_buttons button {
+    display: inline-block;
+    cursor: pointer;
+
+    color: #ecf0f1;
+    font-weight: 18px;
+
+    background-color: #3498db;
+    border: none;
+
+    font-size: 21px;
+
+    width: 150px;
+    padding: 4px;
+    margin: 5px;
+}
+#center_buttons input {
+    display: block;
+    width: 300px;
+    margin: 5px auto 5px auto;
+
+    cursor: pointer;
+    color: green;
+    background-color: blue;
+}
+#center_buttons input:focus {
+    outline: none;
+}
+
+#button_explode {
+    width: 50px;
+    height: 50px;
+    margin: 10px;
+
+    opacity: 0.4;
+    cursor: pointer;
+}
+
+#sequence_display {
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    height: auto;
+    padding: 5px;
+
+    text-align: center;
+    vertical-align: bottom;
+    font-size: 18px;
+
+    background-color: rgba(149, 165, 166, 0.5);
 }
