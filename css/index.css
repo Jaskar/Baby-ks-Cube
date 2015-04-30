@@ -125,3 +125,39 @@ button:focus {
 
     background-color: rgba(149, 165, 166, 0.5);
 }
+
+#button_infos {
+    width: 50px;
+    height: 50px;
+    margin: 10px;
+
+    opacity: 0.4;
+    cursor: pointer;
+
+    position: fixed;
+    top: 0px;
+    right: 0px;
+}
+#button_help {
+    width: 50px;
+    height: 50px;
+    margin: 10px;
+
+    opacity: 0.4;
+    cursor: pointer;
+
+    position: fixed;
+    top: 0px;
+    right: 60px;
+}
+
+#contact_div {
+    float: right;
+    position: fixed;
+    top: 5px;
+    right: 10px;
+}
+#contact_div a {
+    color: white;
+    text-decoration: none;
+}

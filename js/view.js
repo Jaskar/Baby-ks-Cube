@@ -1,6 +1,7 @@
 function View(cube, controller, solver) {
 
     var isExploded = false;
+    var isPrime = false;
 
     document.getElementById("button_explode").addEventListener('click', function () {
         if(isExploded) {
@@ -83,5 +84,43 @@ function View(cube, controller, solver) {
 
     document.getElementById("slider_speed").addEventListener('input', function(evt){
         cube.setSpeed(this.value);
+    });
+
+    window.addEventListener('keydown', function(evt) {
+        console.log(evt.keyCode);
+        switch(evt.keyCode) {
+
+            case 32:            // Space
+                isPrime = true;
+                break;
+
+            case 66:            // Back
+                isPrime ? controller.turnBackReverse() : controller.turnBack();
+                break;
+            case 68:            // Down
+                isPrime ? controller.turnDownReverse() : controller.turnDown();
+                break;
+            case 70:            // Front
+                isPrime ? controller.turnFrontReverse() : controller.turnFront();
+                break;
+            case 76:            // Left
+                isPrime ? controller.turnLeftReverse() : controller.turnLeft();
+                break;
+            case 82:            // Right
+                isPrime ? controller.turnRightReverse() : controller.turnRight();
+                break;
+            case 85:            // Up
+                isPrime ? controller.turnUpReverse() : controller.turnUp();
+                break;
+        }
+    });
+    window.addEventListener('keyup', function(evt) {
+        console.log(evt.keyCode);
+        switch(evt.keyCode) {
+
+            case 32:            // Space
+                isPrime = false;
+                break;
+        }
     });
 }
