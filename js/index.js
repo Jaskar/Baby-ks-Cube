@@ -20,12 +20,14 @@ function initScene() {
 
     // Create scene
     var scene = new BABYLON.Scene(engine);
-
     scene.clearColor = BABYLON.Color3.FromInts(149, 165, 166);
+    //scene.debugLayer.show();
 
     // Create the camera
     var camera = new BABYLON.ArcRotateCamera("Camera", Math.PI / 8 * 5.5, Math.PI / 3, 8, BABYLON.Vector3.Zero(), scene);
     camera.wheelPrecision = 200;
+    //camera.upperBetaLimit = null;
+    //camera.lowerBetaLimit = null;
     camera.attachControl(canvas);
 
     // Create light
@@ -46,9 +48,12 @@ function initScene() {
     var myView = new View(myCube, myController, mySolver);
 
     engine.runRenderLoop(function () {
+
+        // Prevent the camera to go in the cube
         if(camera.radius < 3.15) {
             camera.radius = 3.15;
         }
+
         scene.render();
     });
 

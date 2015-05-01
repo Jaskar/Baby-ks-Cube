@@ -75,31 +75,31 @@ Cube.prototype.initFaces = function() {
     this.centerPiece.material = this._matCenterPiece;
 
     this.cylinderL = BABYLON.Mesh.CreateCylinder("cylinderL", 1.5, 0.2, 0.2, 16, 2, this._scene);
-    this.cylinderL.position.x = 0.74;
+    this.cylinderL.position.x = 0.735;
     this.cylinderL.rotation.z = Math.PI / 2;
     this.cylinderL.material = this._matCenterPieces;
 
     this.cylinderR = BABYLON.Mesh.CreateCylinder("cylinderR", 1.5, 0.2, 0.2, 16, 2, this._scene);
-    this.cylinderR.position.x = -0.74;
+    this.cylinderR.position.x = -0.735;
     this.cylinderR.rotation.z = -Math.PI / 2;
     this.cylinderR.material = this._matCenterPieces;
 
     this.cylinderF = BABYLON.Mesh.CreateCylinder("cylinderF", 1.5, 0.2, 0.2, 16, 2, this._scene);
-    this.cylinderF.position.z = 0.74;
+    this.cylinderF.position.z = 0.735;
     this.cylinderF.rotation.x = Math.PI / 2;
     this.cylinderF.material = this._matCenterPieces;
 
     this.cylinderB = BABYLON.Mesh.CreateCylinder("cylinderB", 1.5, 0.2, 0.2, 16, 2, this._scene);
-    this.cylinderB.position.z = -0.74;
+    this.cylinderB.position.z = -0.735;
     this.cylinderB.rotation.x = -Math.PI / 2;
     this.cylinderB.material = this._matCenterPieces;
 
     this.cylinderU = BABYLON.Mesh.CreateCylinder("cylinderU", 1.5, 0.2, 0.2, 16, 2, this._scene);
-    this.cylinderU.position.y = 0.74;
+    this.cylinderU.position.y = 0.735;
     this.cylinderU.material = this._matCenterPieces;
 
     this.cylinderD = BABYLON.Mesh.CreateCylinder("cylinderD", 1.5, 0.2, 0.2, 16, 2, this._scene);
-    this.cylinderD.position.y = -0.74;
+    this.cylinderD.position.y = -0.735;
     this.cylinderD.material = this._matCenterPieces;
 
     // Front
@@ -1272,12 +1272,12 @@ Cube.prototype.explodedView = function() {
     }
     // Reconstruct the cube
     else {
-        this.cylinderL.position.x = 0.75;
-        this.cylinderR.position.x = -0.75;
-        this.cylinderF.position.z = 0.75;
-        this.cylinderB.position.z = -0.75;
-        this.cylinderU.position.y = 0.75;
-        this.cylinderD.position.y = -0.75;
+        this.cylinderL.position.x = 0.735;
+        this.cylinderR.position.x = -0.735;
+        this.cylinderF.position.z = 0.735;
+        this.cylinderB.position.z = -0.735;
+        this.cylinderU.position.y = 0.735;
+        this.cylinderD.position.y = -0.735;
         // Front
         for (x = 0; x < 3; x++) {
             for (y = 0; y < 3; y++) {

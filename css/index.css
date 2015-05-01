@@ -96,8 +96,6 @@ button:focus {
     margin: 5px auto 5px auto;
 
     cursor: pointer;
-    color: green;
-    background-color: blue;
 }
 #center_buttons input:focus {
     outline: none;
@@ -115,9 +113,9 @@ button:focus {
 #sequence_display {
     position: fixed;
     bottom: 0px;
-    width: 100%;
+    width: calc(100% - 20px);
     height: auto;
-    padding: 5px;
+    padding: 5px 10px 5px 10px;
 
     text-align: center;
     vertical-align: bottom;
