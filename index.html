@@ -20,22 +20,28 @@
     <script type="text/javascript" src="./js/scrambler.js"></script>
     <script type="text/javascript" src="./js/view.js"></script>
     <script type="text/javascript" src="./js/index.js"></script>
+	
+	<!-- Google analytics -->
+	<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	
+	ga('create', 'UA-62527245-1', 'auto');
+	ga('send', 'pageview');
+	</script>
 </head>
 <body>
 
     <!-- Buttons to rotate the cube -->
     <div id="buttonsDiv">
 
-        <img id="button_explode" src="./assets/view.png" alt="Exploded view" />
-        <!--<img id="button_infos" src="./assets/infos.png" alt="Infos" />-->
-        <!--<img id="button_help" src="./assets/help.png" alt="Help" />-->
-        <div id="contact_div"><a href="mailto:contact@jaskar.host-ed.me" target="_top">Send me an email</a></div>
-
         <div id="center_buttons">
             <button id="button_scramble"   class="buttonMovement"> SCRAMBLE  </button>
             <button id="button_solve"      class="buttonMovement"> SOLVE     </button>
 
-            <input id="slider_speed" type="range" min="50" max="1000" value="500" />
+            <input id="slider_speed" type="range" min="50" max="1000" value="500" title="Change the cube rotation speed" />
         </div>
 
         <div id="left_buttons" class="column_buttons">
@@ -59,7 +65,44 @@
         </div>
     </div>
 
+    <img id="button_explode" src="./assets/view.png" alt="Exploded view" title="Exploded view of the cube" />
+    <img id="button_infos" src="./assets/infos.png" alt="Infos" />
+    <img id="button_help" src="./assets/help.png" alt="Help" />
+
     <div id="sequence_display"></div>
+
+    <div id="panel_blur"></div>
+    <div id="panel_help" class="panel">
+        <h3>HELP</h3>
+        <p>
+            It's a 'simple' cube.
+            <br><br>
+            You can turn a face by 90° clockwise by clicking on a left panel button or by pressing the corresponding key.
+            You can turn a face by 90° counterclockwise by clicking on a right panel button or by pressing corresponding key + space bar.
+            <br><br>
+            Other buttons :<br>
+            - The eye : Exploded view of the cube (you can't play with the cube while the exploded view is active).
+            - Scramble : Scramble the cube.
+            - Solve : Solve the cube.
+            - Slide bar : Change the speed of the cube rotation.
+        </p>
+    </div>
+    <div id="panel_infos" class="panel">
+        <h3>INFOS</h3>
+        <p>
+            A cube player made by Anthony G. (aka Jaskar).<br>
+            You can find the project / source code on <a href="https://github.com/Jaskar/Baby-ks-Cube">github</a> and use it as you want, free of charge.
+            If you like it, share it or send me a little mail.
+
+            <div id="contact_div"><a href="mailto:contact@jaskar.host-ed.me" target="_top">Send me a message</a></div>
+
+            <br>
+            This website use WebGL, with <a href="https://github.com/BabylonJS/Babylon.js">BabylonJS library</a>.
+
+            <br><br>
+            Jaskar - 2015
+        </p>
+    </div>
 
     <canvas id="game_canvas"></canvas>
 

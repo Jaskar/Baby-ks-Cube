@@ -101,16 +101,9 @@ button:focus {
     outline: none;
 }
 
-#button_explode {
-    width: 50px;
-    height: 50px;
-    margin: 10px;
-
-    opacity: 0.4;
-    cursor: pointer;
-}
-
 #sequence_display {
+    z-index: 5;
+
     position: fixed;
     bottom: 0px;
     width: calc(100% - 20px);
@@ -124,7 +117,22 @@ button:focus {
     background-color: rgba(149, 165, 166, 0.5);
 }
 
+#button_explode {
+    width: 50px;
+    height: 50px;
+    margin: 10px;
+
+    opacity: 0.4;
+    cursor: pointer;
+
+    position: fixed;
+    top: 0px;
+    left: 0px;
+}
+
 #button_infos {
+    z-index: 20;
+
     width: 50px;
     height: 50px;
     margin: 10px;
@@ -137,6 +145,8 @@ button:focus {
     right: 0px;
 }
 #button_help {
+    z-index: 20;
+
     width: 50px;
     height: 50px;
     margin: 10px;
@@ -149,13 +159,44 @@ button:focus {
     right: 60px;
 }
 
-#contact_div {
-    float: right;
+#panel_blur {
+    z-index: 10;
+
+    width: 100%;
+    height: 100%;
     position: fixed;
-    top: 5px;
-    right: 10px;
+    top: 0px;
+    left: 0px;
+    visibility: hidden;
+    
+    background-color: lightgray;
+    opacity: 1;
+
+    -webkit-filter: blur(200px);
+    -moz-filter: blur(200px);
+    -o-filter: blur(200px);
+    -ms-filter: blur(200px);
+    filter: blur(200px);
 }
-#contact_div a {
-    color: white;
+.panel {
+    z-index: 15;
+
+    text-align: center;
+    font-size: 18px;
+
+    overflow-y: auto;
+
+    position: fixed;
+    top: calc(150px);
+    left: calc(50% - 200px);
+    visibility: hidden;
+
+    width: 400px;
+}
+a {
+    color: blue;
     text-decoration: none;
+}
+#contact_div {
+    font-size: 22px;
 }

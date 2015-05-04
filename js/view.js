@@ -2,6 +2,8 @@ function View(cube, controller, solver) {
 
     var isExploded = false;
     var isPrime = false;
+    var isHelpDisplayed = false;
+    var isInfosDisplayed = false;
 
     document.getElementById("button_explode").addEventListener('click', function () {
         // DOn't explode if it's turning
@@ -24,6 +26,7 @@ function View(cube, controller, solver) {
 
         cube.explodedView();
     });
+
     document.getElementById("button_scramble").addEventListener('click', function () {
         // Don't do any move while it's exploded
         if(isExploded) {
@@ -147,6 +150,45 @@ function View(cube, controller, solver) {
             return;
         }
         cube.setSpeed(this.value);
+    });
+
+    document.getElementById("button_help").addEventListener('click', function() {
+        if(isHelpDisplayed) {
+            isInfosDisplayed = false;
+            isHelpDisplayed = false;
+            document.getElementById("panel_blur").style.visibility = 'hidden';
+            document.getElementById("panel_help").style.visibility = 'hidden';
+            document.getElementById("panel_help").style.opacity = 0.4;
+            document.getElementById("panel_infos").style.visibility = 'hidden';
+            document.getElementById("panel_infos").style.opacity = 0.4;
+        } else {
+            isInfosDisplayed = false;
+            isHelpDisplayed = true;
+            document.getElementById("panel_blur").style.visibility = 'visible';
+            document.getElementById("panel_help").style.visibility = 'visible';
+            document.getElementById("panel_help").style.opacity = 1;
+            document.getElementById("panel_infos").style.visibility = 'hidden';
+            document.getElementById("panel_infos").style.opacity = 0.4;
+        }
+    });
+    document.getElementById("button_infos").addEventListener('click', function() {
+        if (isInfosDisplayed) {
+            isInfosDisplayed = false;
+            isHelpDisplayed = false;
+            document.getElementById("panel_blur").style.visibility = 'hidden';
+            document.getElementById("panel_help").style.visibility = 'hidden';
+            document.getElementById("panel_help").style.opacity = 0.4;
+            document.getElementById("panel_infos").style.visibility = 'hidden';
+            document.getElementById("panel_infos").style.opacity = 0.4;
+        } else {
+            isHelpDisplayed = false;
+            isInfosDisplayed = true;
+            document.getElementById("panel_blur").style.visibility = 'visible';
+            document.getElementById("panel_infos").style.visibility = 'visible';
+            document.getElementById("panel_infos").style.opacity = 1;
+            document.getElementById("panel_help").style.visibility = 'hidden';
+            document.getElementById("panel_help").style.opacity = 0.4;
+        }
     });
 
     window.addEventListener('keydown', function(evt) {
