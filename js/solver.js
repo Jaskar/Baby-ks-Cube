@@ -42,86 +42,78 @@ Solver.prototype.solve = function() {
 
 Solver.prototype.doMoves = function(that) {
 
-    // Minimize the sequence by deleting contrary moves
-    //for(var i = this.resolveSequence.length-1; i > 0; i--) {
-    //    switch(this.resolveSequence[i]) {
-    //        case "U":
-    //            if(this.resolveSequence[i-1] == "U'") {
-    //                this.resolveSequence.splice(i-1, 2);
-    //                i = this.resolveSequence.length;
-    //            }
-    //            break;
-    //        case "U'":
-    //            if(this.resolveSequence[i-1] == "U") {
-    //                this.resolveSequence.splice(i-1, 2);
-    //                i = this.resolveSequence.length;
-    //            }
-    //            break;
-    //        case "D":
-    //            if(this.resolveSequence[i-1] == "D'") {
-    //                this.resolveSequence.splice(i-1, 2);
-    //                i = this.resolveSequence.length;
-    //            }
-    //            break;
-    //        case "D'":
-    //            if(this.resolveSequence[i-1] == "D") {
-    //                this.resolveSequence.splice(i-1, 2);
-    //                i = this.resolveSequence.length;
-    //            }
-    //            break;
-    //        case "L":
-    //            if(this.resolveSequence[i-1] == "L'") {
-    //                this.resolveSequence.splice(i-1, 2);
-    //                i = this.resolveSequence.length;
-    //            }
-    //            break;
-    //        case "L'":
-    //            if(this.resolveSequence[i-1] == "L") {
-    //                this.resolveSequence.splice(i-1, 2);
-    //                i = this.resolveSequence.length;
-    //            }
-    //            break;
-    //        case "R":
-    //            if(this.resolveSequence[i-1] == "F'") {
-    //                this.resolveSequence.splice(i-1, 2);
-    //                i = this.resolveSequence.length;
-    //            }
-    //            break;
-    //        case "R'":
-    //            if(this.resolveSequence[i-1] == "R") {
-    //                this.resolveSequence.splice(i-1, 2);
-    //                i = this.resolveSequence.length;
-    //            }
-    //            break;
-    //        case "F":
-    //            if(this.resolveSequence[i-1] == "F'") {
-    //                this.resolveSequence.splice(i-1, 2);
-    //                i = this.resolveSequence.length;
-    //            }
-    //            break;
-    //        case "F'":
-    //            if(this.resolveSequence[i-1] == "F") {
-    //                this.resolveSequence.splice(i-1, 2);
-    //                i = this.resolveSequence.length;
-    //            }
-    //            break;
-    //        case "B":
-    //            if(this.resolveSequence[i-1] == "B'") {
-    //                this.resolveSequence.splice(i-1, 2);
-    //                i = this.resolveSequence.length;
-    //            }
-    //            break;
-    //        case "B'":
-    //            if(this.resolveSequence[i-1] == "B") {
-    //                this.resolveSequence.splice(i-1, 2);
-    //                i = this.resolveSequence.length;
-    //            }
-    //            break;
-    //        default:
-    //            console.log("Problem during minimize resolve sequence");
-    //            break;
-    //    }
-    //}
+    console.log(this.resolveSequence.length);
+
+    //Minimize the sequence by deleting contrary moves
+    for(var i = 0; i < this.resolveSequence.length-2; i++) {
+        switch(this.resolveSequence[i]) {
+            case "U":
+                if(this.resolveSequence[i+1] == "U'") {
+                    this.resolveSequence.splice(i, 2);
+                }
+                break;
+            case "U'":
+                if(this.resolveSequence[i+1] == "U") {
+                    this.resolveSequence.splice(i, 2);
+                }
+                break;
+            case "D":
+                if(this.resolveSequence[i+1] == "D'") {
+                    this.resolveSequence.splice(i, 2);
+                }
+                break;
+            case "D'":
+                if(this.resolveSequence[i+1] == "D") {
+                    this.resolveSequence.splice(i, 2);
+                }
+                break;
+            case "L":
+                if(this.resolveSequence[i+1] == "L'") {
+                    this.resolveSequence.splice(i, 2);
+                }
+                break;
+            case "L'":
+                if(this.resolveSequence[i+1] == "L") {
+                    this.resolveSequence.splice(i, 2);
+                }
+                break;
+            case "R":
+                if(this.resolveSequence[i+1] == "F'") {
+                    this.resolveSequence.splice(i, 2);
+                }
+                break;
+            case "R'":
+                if(this.resolveSequence[i+1] == "R") {
+                    this.resolveSequence.splice(i, 2);
+                }
+                break;
+            case "F":
+                if(this.resolveSequence[i+1] == "F'") {
+                    this.resolveSequence.splice(i, 2);
+                }
+                break;
+            case "F'":
+                if(this.resolveSequence[i+1] == "F") {
+                    this.resolveSequence.splice(i, 2);
+                }
+                break;
+            case "B":
+                if(this.resolveSequence[i+1] == "B'") {
+                    this.resolveSequence.splice(i, 2);
+                }
+                break;
+            case "B'":
+                if(this.resolveSequence[i+1] == "B") {
+                    this.resolveSequence.splice(i, 2);
+                }
+                break;
+            default:
+                console.log("Problem during minimize resolve sequence : " + this.resolveSequence[i]);
+                break;
+        }
+    }
+
+    console.log(this.resolveSequence.length);
 
     this.resolveSequence.forEach(function(move) {
         switch(move) {

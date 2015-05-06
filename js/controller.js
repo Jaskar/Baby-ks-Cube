@@ -1,6 +1,7 @@
 function Controller(cube) {
 
     this.cube = cube;
+    this.scrambler = new Scrambler();
 
     this.moves = [];
     this.isTurning = false;
@@ -91,65 +92,52 @@ Controller.prototype._turnDownReverse = function (that) {
 // EXTERNAL FUNCTIONS TO CALL MOVEMENTS ********************************************************************************
 
 Controller.prototype.scramble = function(number) {
-    var scrambleSequence = [];
+    var _that = this;
+    var scrambleSequence = this.scrambler.getScramble();
 
-    for (var i = 0; i < number; i++) {
-        var rand = Math.floor((Math.random() * 12) + 1);
-        switch (rand) {
-            case 1:
-                this.turnLeft();
-                scrambleSequence.push("L");
+    scrambleSequence.forEach(function (move) {
+        switch (move) {
+            case "L":
+                _that.turnLeft();
                 break;
-            case 2:
-                this.turnLeftReverse();
-                scrambleSequence.push("L'");
+            case "L'":
+                _that.turnLeftReverse();
                 break;
-            case 3:
-                this.turnRight();
-                scrambleSequence.push("R");
+            case "R":
+                _that.turnRight();
                 break;
-            case 4:
-                this.turnRightReverse();
-                scrambleSequence.push("R'");
+            case "R'":
+                _that.turnRightReverse();
                 break;
-            case 5:
-                this.turnFront();
-                scrambleSequence.push("F");
+            case "F":
+                _that.turnFront();
                 break;
-            case 6:
-                this.turnFrontReverse();
-                scrambleSequence.push("F'");
-
+            case "F'":
+                _that.turnFrontReverse();
                 break;
-            case 7:
-                this.turnBack();
-                scrambleSequence.push("B");
+            case "B":
+                _that.turnBack();
                 break;
-            case 8:
-                this.turnBackReverse();
-                scrambleSequence.push("B'");
+            case "B'":
+                _that.turnBackReverse();
                 break;
-            case 9:
-                this.turnUp();
-                scrambleSequence.push("U");
+            case "U":
+                _that.turnUp();
                 break;
-            case 10:
-                this.turnUpReverse();
-                scrambleSequence.push("U'");
+            case "U'":
+                _that.turnUpReverse();
                 break;
-            case 11:
-                this.turnDown();
-                scrambleSequence.push("D");
+            case "D":
+                _that.turnDown();
                 break;
-            case 12:
-                this.turnDownReverse();
-                scrambleSequence.push("D'");
+            case "D'":
+                _that.turnDownReverse();
                 break;
             default:
                 console.log('Fail to random correct number! >_<" -> ' + rand);
                 break;
         }
-    }
+    });
 
     if (! this.isTurning) {
         this._nextMove();
@@ -157,6 +145,63 @@ Controller.prototype.scramble = function(number) {
 
     return scrambleSequence;
 };
+
+Controller.prototype.awesomeScramble = function(name) {
+
+    var _that = this;
+    var scrambleSequence = this.scrambler.pattern_3x3(name);
+
+    scrambleSequence.forEach(function (move) {
+        switch (move) {
+            case "L":
+                _that.turnLeft();
+                break;
+            case "L'":
+                _that.turnLeftReverse();
+                break;
+            case "R":
+                _that.turnRight();
+                break;
+            case "R'":
+                _that.turnRightReverse();
+                break;
+            case "F":
+                _that.turnFront();
+                break;
+            case "F'":
+                _that.turnFrontReverse();
+                break;
+            case "B":
+                _that.turnBack();
+                break;
+            case "B'":
+                _that.turnBackReverse();
+                break;
+            case "U":
+                _that.turnUp();
+                break;
+            case "U'":
+                _that.turnUpReverse();
+                break;
+            case "D":
+                _that.turnDown();
+                break;
+            case "D'":
+                _that.turnDownReverse();
+                break;
+            default:
+                console.log('Fail to random correct number! >_<" -> ' + rand);
+                break;
+        }
+    });
+
+    if (! this.isTurning) {
+        this._nextMove();
+    }
+
+    return scrambleSequence;
+};
+
 Controller.prototype.turnFront = function() {
     this.moves.push(this._turnFront);
     if (! this.isTurning) {

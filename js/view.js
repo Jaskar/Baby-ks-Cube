@@ -158,17 +158,17 @@ function View(cube, controller, solver) {
             isHelpDisplayed = false;
             document.getElementById("panel_blur").style.visibility = 'hidden';
             document.getElementById("panel_help").style.visibility = 'hidden';
-            document.getElementById("panel_help").style.opacity = 0.4;
+            document.getElementById("button_help").style.opacity = 0.4;
             document.getElementById("panel_infos").style.visibility = 'hidden';
-            document.getElementById("panel_infos").style.opacity = 0.4;
+            document.getElementById("button_infos").style.opacity = 0.4;
         } else {
             isInfosDisplayed = false;
             isHelpDisplayed = true;
             document.getElementById("panel_blur").style.visibility = 'visible';
             document.getElementById("panel_help").style.visibility = 'visible';
-            document.getElementById("panel_help").style.opacity = 1;
+            document.getElementById("button_help").style.opacity = 1;
             document.getElementById("panel_infos").style.visibility = 'hidden';
-            document.getElementById("panel_infos").style.opacity = 0.4;
+            document.getElementById("button_infos").style.opacity = 0.4;
         }
     });
     document.getElementById("button_infos").addEventListener('click', function() {
@@ -177,17 +177,17 @@ function View(cube, controller, solver) {
             isHelpDisplayed = false;
             document.getElementById("panel_blur").style.visibility = 'hidden';
             document.getElementById("panel_help").style.visibility = 'hidden';
-            document.getElementById("panel_help").style.opacity = 0.4;
+            document.getElementById("button_help").style.opacity = 0.4;
             document.getElementById("panel_infos").style.visibility = 'hidden';
-            document.getElementById("panel_infos").style.opacity = 0.4;
+            document.getElementById("button_infos").style.opacity = 0.4;
         } else {
             isHelpDisplayed = false;
             isInfosDisplayed = true;
             document.getElementById("panel_blur").style.visibility = 'visible';
             document.getElementById("panel_infos").style.visibility = 'visible';
-            document.getElementById("panel_infos").style.opacity = 1;
+            document.getElementById("button_infos").style.opacity = 1;
             document.getElementById("panel_help").style.visibility = 'hidden';
-            document.getElementById("panel_help").style.opacity = 0.4;
+            document.getElementById("button_help").style.opacity = 0.4;
         }
     });
 
@@ -201,6 +201,17 @@ function View(cube, controller, solver) {
 
             case 32:            // Space
                 isPrime = true;
+                break;
+
+            case 49:            // 1
+                document.getElementById("sequence_display").innerHTML =
+                    "Pattern : Checkerboard :<br>" +
+                    controller.awesomeScramble('checkerboard')
+                break;
+            case 50:            // 2
+                document.getElementById("sequence_display").innerHTML =
+                    "Pattern : Cube in the Cube :<br>" +
+                    controller.awesomeScramble('cubeInCube')
                 break;
 
             case 66:            // Back
