@@ -49,7 +49,7 @@ button:focus {
     margin-bottom: 5px;
 }
 .column_buttons button {
-    display: block;
+    display: inline-block;
     cursor: pointer;
 
     color: #ecf0f1;
@@ -170,13 +170,7 @@ button:focus {
     visibility: hidden;
     
     background-color: lightgray;
-    opacity: 1;
-
-    -webkit-filter: blur(200px);
-    -moz-filter: blur(200px);
-    -o-filter: blur(200px);
-    -ms-filter: blur(200px);
-    filter: blur(200px);
+    opacity: 0.8;
 }
 .panel {
     z-index: 15;
@@ -187,11 +181,18 @@ button:focus {
     overflow-y: auto;
 
     position: fixed;
-    top: calc(150px);
+    top: 150px;
     left: calc(50% - 200px);
     visibility: hidden;
 
     width: 400px;
+    
+    background-color: white;
+    border: 3px black double;
+    border-radius: 10px;
+}
+.panel h3 {
+    text-decoration: underline;
 }
 a {
     color: blue;

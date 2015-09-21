@@ -214,23 +214,23 @@ function View(cube, controller, solver) {
                     controller.awesomeScramble('cubeInCube')
                 break;
 
-            case 66:            // Back
+            case 66:            // Back // Blue
                 isPrime ? controller.turnBackReverse() : controller.turnBack();
                 break;
-            case 68:            // Down
-                isPrime ? controller.turnDownReverse() : controller.turnDown();
-                break;
-            case 70:            // Front
+            case 71:            // Front // Green
                 isPrime ? controller.turnFrontReverse() : controller.turnFront();
                 break;
-            case 76:            // Left
+            case 79:            // Left // Orange
                 isPrime ? controller.turnLeftReverse() : controller.turnLeft();
                 break;
-            case 82:            // Right
+            case 82:            // Right // Red
                 isPrime ? controller.turnRightReverse() : controller.turnRight();
                 break;
-            case 85:            // Up
+            case 87:            // Up // White
                 isPrime ? controller.turnUpReverse() : controller.turnUp();
+                break;
+            case 89:            // Down // Yellow
+                isPrime ? controller.turnDownReverse() : controller.turnDown();
                 break;
         }
     });

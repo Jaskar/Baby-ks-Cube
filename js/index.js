@@ -26,9 +26,11 @@ function initScene() {
     // Create the camera
     var camera = new BABYLON.ArcRotateCamera("Camera", Math.PI / 8 * 5.5, Math.PI / 3, 8, BABYLON.Vector3.Zero(), scene);
     camera.wheelPrecision = 200;
-    //camera.upperBetaLimit = null;
-    //camera.lowerBetaLimit = null;
     camera.attachControl(canvas);
+    camera.lowerAlphaLimit = null;
+    camera.upperAlphaLimit = null;
+    camera.upperBetaLimit = null;
+    camera.lowerBetaLimit = null;
 
     // Create light
     var light1 = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(-1,0,0), scene);
