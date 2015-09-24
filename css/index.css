@@ -49,17 +49,16 @@ button:focus {
     margin-bottom: 5px;
 }
 .column_buttons button {
-    display: inline-block;
+    display: block;
     cursor: pointer;
 
     color: #ecf0f1;
-    font-weight: 18px;
 
     background-color: #3498db;
     border: none;
 
     height: 22px;
-    width: 75px;
+    width: 140px;
     padding: 2px;
     margin: 3px;
     margin-top: 5px;

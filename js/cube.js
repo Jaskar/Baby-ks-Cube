@@ -3,6 +3,8 @@ function Cube(scene) {
     // FIELDS
 
     this._scene = scene;
+    this._pieces = [];
+
 
     // Planes containers (faces)
     this._frontPlanes = [[null, null, null], [null, null, null], [null, null, null]];
@@ -55,52 +57,37 @@ Cube.prototype.initColors = function() {
     this._matRed.diffuseTexture =  new BABYLON.Texture("./assets/red.png", this._scene);
     this._matRed.diffuseTexture.hasAlpha = true;
 
-    this._matCenterPiece = new BABYLON.StandardMaterial("centerPiece", this._scene);
-    this._matCenterPiece.specularColor = BABYLON.Color3.Black();
-    this._matCenterPiece.diffuseColor = new BABYLON.Color3(0.35,0.35,0.35);
 
-    this._matCenterPieces = new BABYLON.StandardMaterial("centerPieces", this._scene);
-    this._matCenterPieces.specularColor = BABYLON.Color3.Black();
-    this._matCenterPieces.diffuseColor = new BABYLON.Color3(0.45,0.45,0.45);
+    this._matPieces = new BABYLON.StandardMaterial("centerPieces", this._scene);
+    //this._matPieces.specularColor = BABYLON.Color3.Black();
+    this._matPieces.diffuseColor = new BABYLON.Color3(0.45,0.45,0.45);
 };
 
 Cube.prototype.initFaces = function() {
+    var _this = this;
     var pivotCenter = BABYLON.Mesh.CreateBox("pivotCenter", 1, this._scene);
     pivotCenter.visibility = false;
     var x = 0;
     var y = 0;
 
-    // Center pieces
+    var errorFunction = function() {
+        console.log("Error while loading 3D parts.")
+    };
+
+    // The center piece
     this.centerPiece = BABYLON.Mesh.CreateSphere("centerPiece", 16, 0.5, this._scene);
-    this.centerPiece.material = this._matCenterPiece;
 
-    this.cylinderL = BABYLON.Mesh.CreateCylinder("cylinderL", 1.5, 0.2, 0.2, 16, 2, this._scene);
-    this.cylinderL.position.x = 0.735;
-    this.cylinderL.rotation.z = Math.PI / 2;
-    this.cylinderL.material = this._matCenterPieces;
-
-    this.cylinderR = BABYLON.Mesh.CreateCylinder("cylinderR", 1.5, 0.2, 0.2, 16, 2, this._scene);
-    this.cylinderR.position.x = -0.735;
-    this.cylinderR.rotation.z = -Math.PI / 2;
-    this.cylinderR.material = this._matCenterPieces;
-
-    this.cylinderF = BABYLON.Mesh.CreateCylinder("cylinderF", 1.5, 0.2, 0.2, 16, 2, this._scene);
-    this.cylinderF.position.z = 0.735;
-    this.cylinderF.rotation.x = Math.PI / 2;
-    this.cylinderF.material = this._matCenterPieces;
-
-    this.cylinderB = BABYLON.Mesh.CreateCylinder("cylinderB", 1.5, 0.2, 0.2, 16, 2, this._scene);
-    this.cylinderB.position.z = -0.735;
-    this.cylinderB.rotation.x = -Math.PI / 2;
-    this.cylinderB.material = this._matCenterPieces;
-
-    this.cylinderU = BABYLON.Mesh.CreateCylinder("cylinderU", 1.5, 0.2, 0.2, 16, 2, this._scene);
-    this.cylinderU.position.y = 0.735;
-    this.cylinderU.material = this._matCenterPieces;
-
-    this.cylinderD = BABYLON.Mesh.CreateCylinder("cylinderD", 1.5, 0.2, 0.2, 16, 2, this._scene);
-    this.cylinderD.position.y = -0.735;
-    this.cylinderD.material = this._matCenterPieces;
+    // Pieces
+    BABYLON.SceneLoader.ImportMesh("", "assets/", "Cube.babylon", this._scene, function (newMeshes) {
+        newMeshes.forEach(function(m) {
+            m.material = _this._matPieces;
+            m.isVisible = false;
+            m.scaling.x = 0.025;
+            m.scaling.y = 0.025;
+            m.scaling.z = 0.025;
+            _this._pieces.push(m);
+        });
+    });
 
     // Front
     for (x = 0; x < 3; x++) {
@@ -1215,12 +1202,6 @@ Cube.prototype.explodedView = function() {
 
     // Explode the cube
     if(this._isExploded) {
-        this.cylinderL.position.x = 1.2;
-        this.cylinderR.position.x = -1.2;
-        this.cylinderF.position.z = 1.2;
-        this.cylinderB.position.z = -1.2;
-        this.cylinderU.position.y = 1.2;
-        this.cylinderD.position.y = -1.2;
         // Front
         for (x = 0; x < 3; x++) {
             for (y = 0; y < 3; y++) {
@@ -1269,15 +1250,14 @@ Cube.prototype.explodedView = function() {
                 this._rightPlanes[x][y].position.z = (x - 1) * 1.5;
             }
         }
+
+        // Show pieces
+        this._pieces.forEach(function(m) {
+            m.isVisible = true;
+        });
     }
     // Reconstruct the cube
     else {
-        this.cylinderL.position.x = 0.735;
-        this.cylinderR.position.x = -0.735;
-        this.cylinderF.position.z = 0.735;
-        this.cylinderB.position.z = -0.735;
-        this.cylinderU.position.y = 0.735;
-        this.cylinderD.position.y = -0.735;
         // Front
         for (x = 0; x < 3; x++) {
             for (y = 0; y < 3; y++) {
@@ -1326,5 +1306,10 @@ Cube.prototype.explodedView = function() {
                 this._rightPlanes[x][y].position.z = x - 1;
             }
         }
+
+        // Hide pieces
+        this._pieces.forEach(function(m) {
+            m.isVisible = false;
+        });
     }
 };
