@@ -199,6 +199,10 @@ function View(cube, controller, solver) {
 
         switch(evt.keyCode) {
 
+            case 17:            // Ctrl
+                isPrime = isPrime ? false : true;
+                break;
+
             case 32:            // Space
                 isPrime = true;
                 break;
